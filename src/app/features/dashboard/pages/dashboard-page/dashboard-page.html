@@ -1,0 +1,271 @@
+<div class="dashboard">
+
+  @if (loading()) {
+    <div class="dashboard__loading">
+      <div class="loading-spinner"></div>
+      <p>Loading your dashboard...</p>
+    </div>
+  }
+
+  @if (!loading() && stats()) {
+    <div class="dashboard__inner">
+
+      <!-- ═══ LEFT + MAIN ═══════════════════════════════════ -->
+      <div class="dashboard__main">
+
+        <!-- Header -->
+        <div class="dash-header">
+          <div class="dash-header__left">
+            <h1 class="dash-greeting">
+              {{ greeting() }}, {{ firstName() }}! 👋
+            </h1>
+            <p class="dash-subtext">
+              {{ todayDate() }}
+            </p>
+          </div>
+
+          @if (stats()!.userPlan === 'FREE') {
+            <button class="btn-upgrade" routerLink="/billing">
+              <mat-icon>rocket_launch</mat-icon>
+              Upgrade to Pro
+            </button>
+          }
+        </div>
+
+        <!-- ─── STAT CARDS ─────────────────────────────── -->
+        <div class="stat-grid animate-stagger">
+
+          <!-- Study Time -->
+          <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--purple">
+              <mat-icon>schedule</mat-icon>
+            </div>
+            <div class="stat-card__body">
+              <span class="stat-card__label">Study Time</span>
+              <span class="stat-card__value">
+                {{ stats()!.studyTimeToday }}
+              </span>
+              <span class="stat-card__change"
+                    [class.stat-card__change--down]="!stats()!.studyTimeUp">
+                <mat-icon>
+                  {{ stats()!.studyTimeUp ? 'trending_up' : 'trending_down' }}
+                </mat-icon>
+                {{ stats()!.studyTimeChangePercent | number:'1.0-0' }}%
+                from yesterday
+              </span>
+            </div>
+          </div>
+
+          <!-- Rooms Joined -->
+          <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--cyan">
+              <mat-icon>meeting_room</mat-icon>
+            </div>
+            <div class="stat-card__body">
+              <span class="stat-card__label">Rooms Joined</span>
+              <span class="stat-card__value">
+                {{ stats()!.roomsJoined }}
+              </span>
+              <span class="stat-card__change">
+                <mat-icon>add</mat-icon>
+                {{ stats()!.roomsJoinedThisWeek }} new this week
+              </span>
+            </div>
+          </div>
+
+          <!-- Resources -->
+          <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--amber">
+              <mat-icon>folder_open</mat-icon>
+            </div>
+            <div class="stat-card__body">
+              <span class="stat-card__label">Resources Added</span>
+              <span class="stat-card__value">
+                {{ stats()!.resourcesShared }}
+              </span>
+              <span class="stat-card__change">
+                <mat-icon>add</mat-icon>
+                {{ stats()!.resourcesThisWeek }} this week
+              </span>
+            </div>
+          </div>
+
+          <!-- Current Streak -->
+          <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--green">
+              <mat-icon>local_fire_department</mat-icon>
+            </div>
+            <div class="stat-card__body">
+              <span class="stat-card__label">Current Streak</span>
+              <span class="stat-card__value">
+                {{ stats()!.currentStreak }} days
+              </span>
+              <span class="stat-card__change stat-card__change--streak">
+                Keep it up! 🔥
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ─── CHARTS ROW ─────────────────────────────── -->
+        <div class="charts-row">
+
+          <!-- Weekly Study Time -->
+          <div class="chart-card chart-card--wide">
+            <div class="chart-card__header">
+              <div>
+                <h3 class="chart-card__title">Study Time This Week</h3>
+                <p class="chart-card__sub">Minutes per day</p>
+              </div>
+              <span class="chart-total">
+                {{ stats()!.weeklyMinutes | totalMinutes }} total
+              </span>
+            </div>
+            <div class="chart-wrap">
+              <canvas #weeklyChart></canvas>
+            </div>
+          </div>
+
+          <!-- Study Streak Donut -->
+          <div class="chart-card chart-card--narrow">
+            <div class="chart-card__header">
+              <h3 class="chart-card__title">Study Streak</h3>
+            </div>
+
+            <div class="streak-donut">
+              <div class="streak-donut__chart">
+                <canvas #streakChart></canvas>
+                <div class="streak-donut__center">
+                  <span class="streak-days">{{ stats()!.currentStreak }}</span>
+                  <span class="streak-label">days</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="streak-stats">
+              <div class="streak-stat">
+                <span class="streak-stat__label">Longest Streak</span>
+                <span class="streak-stat__value">
+                  {{ stats()!.longestStreak }} days
+                </span>
+              </div>
+              <div class="streak-stat">
+                <span class="streak-stat__label">Total Days</span>
+                <span class="streak-stat__value">
+                  {{ stats()!.totalStudyDays }}
+                </span>
+              </div>
+              <div class="streak-stat">
+                <span class="streak-stat__label">Total Minutes</span>
+                <span class="streak-stat__value">
+                  {{ stats()!.totalStudyMinutes | number }}
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ─── YOUR ROOMS ─────────────────────────────── -->
+        <div class="section-header">
+          <h3 class="section-title">Your Study Rooms</h3>
+          <a routerLink="/rooms" class="section-link">
+            View all
+            <mat-icon>arrow_forward</mat-icon>
+          </a>
+        </div>
+
+        <div class="rooms-grid animate-stagger">
+          @for (room of myRooms; track room.id) {
+            <div class="room-card"
+                 [style.background]="getRoomColor(room.color)">
+              <div class="room-card__top">
+                <span class="room-card__emoji">{{ room.emoji }}</span>
+                <span class="room-card__online">
+                  <span class="online-dot"></span>
+                </span>
+              </div>
+              <h4 class="room-card__name">{{ room.name }}</h4>
+              <p class="room-card__members">
+                <mat-icon>group</mat-icon>
+                {{ room.members }} members
+              </p>
+              <a [routerLink]="['/rooms', room.id]"
+                 class="room-card__enter">
+                Enter
+                <mat-icon>arrow_forward</mat-icon>
+              </a>
+            </div>
+          }
+        </div>
+
+      </div>
+
+      <!-- ═══ RIGHT PANEL ════════════════════════════════════ -->
+      <aside class="dashboard__right">
+
+        <!-- Online Friends -->
+        <div class="panel-card">
+          <div class="panel-card__header">
+            <h3>Online Friends</h3>
+            <a href="#" class="panel-link">See all</a>
+          </div>
+
+          <div class="friends-list">
+            @for (friend of onlineFriends; track friend.id) {
+              <div class="friend-item">
+                <div class="friend-avatar">
+                  {{ friend.name.charAt(0) }}
+                  <span class="online-dot friend-dot"></span>
+                </div>
+                <div class="friend-info">
+                  <span class="friend-name">{{ friend.name }}</span>
+                  <span class="friend-status">{{ friend.status }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Leaderboard (This Week) -->
+        <div class="panel-card">
+          <div class="panel-card__header">
+            <h3>Leaderboard</h3>
+            <span class="panel-badge">This Week</span>
+          </div>
+
+          <div class="leaderboard-list">
+            @for (entry of leaderboard; track entry.rank) {
+              <div class="lb-item" [class.lb-item--you]="entry.you">
+                <span class="lb-rank"
+                      [class.lb-rank--gold]="entry.rank === 1"
+                      [class.lb-rank--silver]="entry.rank === 2"
+                      [class.lb-rank--bronze]="entry.rank === 3">
+                  {{ entry.rank }}
+                </span>
+                <div class="lb-avatar">{{ entry.name.charAt(0) }}</div>
+                <span class="lb-name">{{ entry.name }}</span>
+                <span class="lb-mins">{{ entry.minutes | number }} mins</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Upgrade Card (FREE users only) -->
+        @if (stats()!.userPlan === 'FREE') {
+          <div class="upgrade-card">
+            <div class="upgrade-card__icon">🚀</div>
+            <h3>Ready to go Pro?</h3>
+            <p>Unlimited rooms, advanced analytics, and more!</p>
+            <a routerLink="/billing" class="upgrade-btn">
+              Upgrade Now
+            </a>
+          </div>
+        }
+
+      </aside>
+    </div>
+  }
+
+</div>

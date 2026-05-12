@@ -1,0 +1,194 @@
+<div class="shell" [class.shell--collapsed]="isCollapsed() && !isMobile()">
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- MOBILE BACKDROP                                 -->
+  <!-- ═══════════════════════════════════════════════ -->
+  @if (isMobile() && mobileOpen()) {
+    <div class="shell__backdrop" (click)="closeMobileMenu()"></div>
+  }
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SIDEBAR                                         -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <aside class="sidebar"
+         [class.sidebar--collapsed]="isCollapsed() && !isMobile()"
+         [class.sidebar--mobile-open]="isMobile() && mobileOpen()">
+
+    <!-- Brand -->
+    <div class="sidebar__brand">
+      <div class="brand-logo">
+        <mat-icon class="brand-logo__icon">auto_stories</mat-icon>
+      </div>
+      @if (!isCollapsed() || isMobile()) {
+        <div class="brand-text">
+          <span class="brand-name">StudySync</span>
+          <span class="brand-sub">Learn together</span>
+        </div>
+      }
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sidebar__nav">
+      @for (item of navItems; track item.route) {
+        <a class="nav-item"
+           [routerLink]="item.route"
+           routerLinkActive="nav-item--active"
+           [matTooltip]="(isCollapsed() && !isMobile()) ? item.label : ''"
+           matTooltipPosition="right"
+           (click)="closeMobileMenu()">
+
+          <div class="nav-item__icon">
+            <mat-icon>{{ item.icon }}</mat-icon>
+            @if (item.badge && (isCollapsed() && !isMobile())) {
+              <span class="nav-item__dot"></span>
+            }
+          </div>
+
+          @if (!isCollapsed() || isMobile()) {
+            <span class="nav-item__label">{{ item.label }}</span>
+
+            @if (item.badge) {
+              <span class="nav-item__badge">{{ item.badge }}</span>
+            }
+          }
+
+        </a>
+      }
+    </nav>
+
+    <!-- Spacer -->
+    <div class="sidebar__spacer"></div>
+
+    <!-- Streak card — only when expanded -->
+    @if (!isCollapsed() || isMobile()) {
+      <div class="streak-card">
+        <div class="streak-card__emoji">🔥</div>
+        <div class="streak-card__text">
+          <strong>Keep going, {{ firstName() }}!</strong>
+          <span>You're on a learning streak.</span>
+        </div>
+      </div>
+    }
+
+    <!-- Theme toggle + collapse button -->
+    <div class="sidebar__bottom">
+
+      <!-- Theme toggle -->
+      @if (!isCollapsed() || isMobile()) {
+        <app-theme-toggle />
+      }
+
+      <!-- Collapse button (desktop only) -->
+      @if (!isMobile()) {
+        <button class="collapse-btn"
+                (click)="toggleCollapse()"
+                [matTooltip]="isCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+                matTooltipPosition="right">
+          <mat-icon>
+            {{ isCollapsed() ? 'chevron_right' : 'chevron_left' }}
+          </mat-icon>
+        </button>
+      }
+
+    </div>
+
+  </aside>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- MAIN AREA                                       -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="main">
+
+    <!-- HEADER -->
+    <header class="header">
+
+      <!-- Mobile hamburger -->
+      @if (isMobile()) {
+        <button class="header__hamburger" (click)="toggleCollapse()">
+          <mat-icon>menu</mat-icon>
+        </button>
+      }
+
+      <!-- Search bar -->
+      <div class="header__search">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input class="search-input"
+               type="text"
+               placeholder="Search rooms, resources, people...">
+        <kbd class="search-shortcut">⌘K</kbd>
+      </div>
+
+      <!-- Right actions -->
+      <div class="header__right">
+
+        <!-- Create -->
+        <button class="header__btn"
+                matTooltip="Create new"
+                mat-icon-button>
+          <mat-icon>add</mat-icon>
+        </button>
+
+        <!-- Notifications -->
+        <button class="header__btn"
+                routerLink="/notifications"
+                mat-icon-button>
+          <mat-icon
+            matBadge="8"
+            matBadgeSize="small">
+            notifications_none
+          </mat-icon>
+        </button>
+
+        <!-- Avatar + profile menu -->
+        <button class="header__avatar"
+                [matMenuTriggerFor]="profileMenu">
+          <div class="avatar">
+            @if (user()?.avatarUrl) {
+              <img [src]="user()!.avatarUrl!"
+                   [alt]="user()!.name"
+                   class="avatar__img">
+            } @else {
+              <span class="avatar__letter">{{ avatarLetter() }}</span>
+            }
+          </div>
+          <div class="avatar__online"></div>
+          @if (!isMobile()) {
+            <div class="avatar__info">
+              <span class="avatar__name">{{ user()?.name }}</span>
+              <span class="avatar__sub">Level 12</span>
+            </div>
+          }
+        </button>
+
+        <mat-menu #profileMenu="matMenu" xPosition="before">
+          <div class="profile-menu-header">
+            <strong>{{ user()?.name }}</strong>
+            <span>{{ user()?.email }}</span>
+          </div>
+          <mat-divider />
+          <button mat-menu-item routerLink="/profile">
+            <mat-icon>person_outline</mat-icon>
+            Profile
+          </button>
+          <button mat-menu-item routerLink="/settings">
+            <mat-icon>settings</mat-icon>
+            Settings
+          </button>
+          <mat-divider />
+          <button mat-menu-item class="logout-btn" (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            Sign out
+          </button>
+        </mat-menu>
+
+      </div>
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <main class="main__content">
+      <router-outlet />
+    </main>
+
+  </div>
+
+</div>
