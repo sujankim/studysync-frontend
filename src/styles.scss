@@ -1,39 +1,43 @@
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
-@use '@angular/material' as mat;
+// ─── 1. Angular Material Theme (MUST be first) ───────────────
+@use 'styles/theme';
+
+// ─── 2. Design System (order matters) ────────────────────────
+@use 'styles/variables';
+@use 'styles/typography';
+@use 'styles/ _components'as components;
+@use 'styles/animations';
+@use 'styles/utilities';
+
+// ─── 3. Global Reset ─────────────────────────────────────────
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 html {
   height: 100%;
-  @include mat.theme(
-    (
-      color: (
-        primary: mat.$azure-palette,
-        tertiary: mat.$blue-palette,
-      ),
-      typography: Roboto,
-      density: 0,
-    )
-  );
+  scroll-behavior: smooth;
 }
 
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
-  margin: 0;
   height: 100%;
+  overflow-x: hidden;
+  background-color: var(--ss-bg-base);
+  color: var(--ss-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
-/* You can add global styles to this file, and also import other style files */
+
+// Smooth theme transition on all elements
+*,
+*::before,
+*::after {
+  transition: background-color 0.25s ease,
+  border-color 0.25s ease,
+  box-shadow 0.25s ease;
+}
+
+// Except things that shouldn't transition
+button, a, input, textarea, select, mat-icon {
+  transition: var(--ss-transition) !important;
+}

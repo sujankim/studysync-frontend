@@ -1,0 +1,222 @@
+// ============================================================
+// STUDYSYNC — DESIGN SYSTEM
+// Two themes: light (default) + dark (cosmic)
+// Usage: var(--ss-bg-base), var(--ss-text-primary), etc.
+// ============================================================
+
+// ─── SHARED BRAND COLORS (never change between themes) ───────
+:root {
+  // Brand
+  --ss-primary:          #7c3aed;
+  --ss-primary-light:    #a78bfa;
+  --ss-primary-dark:     #5b21b6;
+  --ss-primary-50:       #ede9fe;
+  --ss-primary-glow:     rgba(124, 58, 237, 0.15);
+  --ss-primary-glow-md:  rgba(124, 58, 237, 0.25);
+  --ss-primary-glow-lg:  rgba(124, 58, 237, 0.4);
+
+  --ss-secondary:        #06b6d4;
+  --ss-secondary-light:  #22d3ee;
+  --ss-secondary-dark:   #0891b2;
+  --ss-secondary-glow:   rgba(6, 182, 212, 0.15);
+
+  // Semantic
+  --ss-success:          #10b981;
+  --ss-success-bg:       rgba(16, 185, 129, 0.12);
+  --ss-warning:          #f59e0b;
+  --ss-warning-bg:       rgba(245, 158, 11, 0.12);
+  --ss-error:            #ef4444;
+  --ss-error-bg:         rgba(239, 68, 68, 0.12);
+  --ss-info:             #3b82f6;
+  --ss-info-bg:          rgba(59, 130, 246, 0.12);
+
+  // Gradients (same in both themes)
+  --ss-gradient-brand:   linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%);
+  --ss-gradient-purple:  linear-gradient(135deg, #5b21b6 0%, #7c3aed 100%);
+  --ss-gradient-cyan:    linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
+  --ss-gradient-warm:    linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+  --ss-gradient-streak:  linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+
+  // Layout
+  --ss-sidebar-width:      240px;
+  --ss-sidebar-collapsed:  72px;
+  --ss-header-height:      64px;
+  --ss-right-panel-width:  280px;
+
+  // Radius
+  --ss-radius-xs:   4px;
+  --ss-radius-sm:   8px;
+  --ss-radius-md:   12px;
+  --ss-radius-lg:   16px;
+  --ss-radius-xl:   20px;
+  --ss-radius-2xl:  24px;
+  --ss-radius-full: 9999px;
+
+  // Transitions
+  --ss-transition:       all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --ss-transition-slow:  all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  --ss-transition-fast:  all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+  // Z-index scale
+  --ss-z-base:     1;
+  --ss-z-dropdown: 100;
+  --ss-z-sticky:   200;
+  --ss-z-overlay:  300;
+  --ss-z-modal:    400;
+  --ss-z-toast:    500;
+}
+
+// ============================================================
+// LIGHT THEME
+// ============================================================
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  // ─── Backgrounds ───────────────────────────────────────
+  --ss-bg-base:        #f5f3ff;   // lavender tint base
+  --ss-bg-surface:     #ffffff;   // cards, panels
+  --ss-bg-elevated:    #ffffff;   // modals, dialogs
+  --ss-bg-overlay:     #ede9fe;   // hover state
+  --ss-bg-sidebar:     #faf9ff;   // sidebar bg
+  --ss-bg-header:      #ffffff;   // header bg
+  --ss-bg-input:       #f8f7ff;   // form inputs
+
+  // ─── Text ──────────────────────────────────────────────
+  --ss-text-primary:   #1e1b4b;   // dark indigo
+  --ss-text-secondary: #5b5b8a;   // purple-gray
+  --ss-text-muted:     #9090b8;   // light purple-gray
+  --ss-text-inverse:   #ffffff;   // on dark backgrounds
+  --ss-text-on-brand:  #ffffff;   // on primary buttons
+
+  // ─── Borders ───────────────────────────────────────────
+  --ss-border:         rgba(124, 58, 237, 0.1);
+  --ss-border-md:      rgba(124, 58, 237, 0.2);
+  --ss-border-strong:  rgba(124, 58, 237, 0.35);
+  --ss-border-focus:   #7c3aed;
+
+  // ─── Shadows ───────────────────────────────────────────
+  --ss-shadow-xs:      0 1px 3px rgba(124, 58, 237, 0.06);
+  --ss-shadow-sm:      0 2px 8px rgba(124, 58, 237, 0.08);
+  --ss-shadow-md:      0 4px 16px rgba(124, 58, 237, 0.1);
+  --ss-shadow-lg:      0 8px 32px rgba(124, 58, 237, 0.12);
+  --ss-shadow-xl:      0 16px 48px rgba(124, 58, 237, 0.15);
+  --ss-shadow-brand:   0 4px 20px rgba(124, 58, 237, 0.3);
+  --ss-shadow-glow:    0 0 20px rgba(124, 58, 237, 0.25),
+  0 4px 20px rgba(124, 58, 237, 0.15);
+
+  // ─── Navigation active state ───────────────────────────
+  --ss-nav-active-bg:    #ede9fe;
+  --ss-nav-active-text:  #7c3aed;
+  --ss-nav-hover-bg:     #f5f3ff;
+  --ss-nav-text:         #5b5b8a;
+
+  // ─── Room Card ─────────────────────────────────────────
+  --ss-card-bg:          #ffffff;
+  --ss-card-hover-bg:    #faf9ff;
+  --ss-card-border:      rgba(124, 58, 237, 0.1);
+
+  // ─── Input ─────────────────────────────────────────────
+  --ss-input-bg:         #f8f7ff;
+  --ss-input-border:     rgba(124, 58, 237, 0.2);
+  --ss-input-text:       #1e1b4b;
+  --ss-input-placeholder: #9090b8;
+  --ss-input-focus:      #7c3aed;
+
+  // ─── Scrollbar ─────────────────────────────────────────
+  --ss-scrollbar-track:  #f5f3ff;
+  --ss-scrollbar-thumb:  #c4b5fd;
+  --ss-scrollbar-hover:  #7c3aed;
+
+  // ─── Stat card icons ───────────────────────────────────
+  --ss-stat-purple-bg: rgba(124, 58, 237, 0.1);
+  --ss-stat-cyan-bg:   rgba(6, 182, 212, 0.1);
+  --ss-stat-amber-bg:  rgba(245, 158, 11, 0.1);
+  --ss-stat-green-bg:  rgba(16, 185, 129, 0.1);
+  --ss-stat-purple:    #7c3aed;
+  --ss-stat-cyan:      #0891b2;
+  --ss-stat-amber:     #d97706;
+  --ss-stat-green:     #059669;
+
+  // ─── Auth / Landing backgrounds ────────────────────────
+  --ss-auth-left-overlay:    rgba(245, 243, 255, 0.4);
+  --ss-landing-overlay:      rgba(245, 243, 255, 0.7);
+  --ss-hero-text:            #1e1b4b;
+}
+
+// ============================================================
+// DARK THEME (COSMIC)
+// ============================================================
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  // ─── Backgrounds ───────────────────────────────────────
+  --ss-bg-base:        #08081a;   // deepest
+  --ss-bg-surface:     #0f0f23;   // cards, panels
+  --ss-bg-elevated:    #151530;   // modals, dialogs
+  --ss-bg-overlay:     #1a1a3e;   // hover state
+  --ss-bg-sidebar:     #0a0a1f;   // sidebar bg
+  --ss-bg-header:      #0f0f23;   // header bg
+  --ss-bg-input:       #151530;   // form inputs
+
+  // ─── Text ──────────────────────────────────────────────
+  --ss-text-primary:   #f1f5f9;   // near white
+  --ss-text-secondary: #94a3b8;   // slate
+  --ss-text-muted:     #475569;   // dark slate
+  --ss-text-inverse:   #0f0f23;   // on light backgrounds
+  --ss-text-on-brand:  #ffffff;
+
+  // ─── Borders ───────────────────────────────────────────
+  --ss-border:         rgba(255, 255, 255, 0.07);
+  --ss-border-md:      rgba(255, 255, 255, 0.12);
+  --ss-border-strong:  rgba(124, 58, 237, 0.4);
+  --ss-border-focus:   #7c3aed;
+
+  // ─── Shadows ───────────────────────────────────────────
+  --ss-shadow-xs:      0 1px 3px rgba(0, 0, 0, 0.3);
+  --ss-shadow-sm:      0 2px 8px rgba(0, 0, 0, 0.4);
+  --ss-shadow-md:      0 4px 16px rgba(0, 0, 0, 0.5);
+  --ss-shadow-lg:      0 8px 32px rgba(0, 0, 0, 0.6);
+  --ss-shadow-xl:      0 16px 48px rgba(0, 0, 0, 0.7);
+  --ss-shadow-brand:   0 4px 20px rgba(124, 58, 237, 0.4);
+  --ss-shadow-glow:    0 0 24px rgba(124, 58, 237, 0.5),
+  0 4px 20px rgba(124, 58, 237, 0.3);
+
+  // ─── Navigation active state ───────────────────────────
+  --ss-nav-active-bg:    rgba(124, 58, 237, 0.2);
+  --ss-nav-active-text:  #a78bfa;
+  --ss-nav-hover-bg:     rgba(255, 255, 255, 0.05);
+  --ss-nav-text:         #94a3b8;
+
+  // ─── Room Card ─────────────────────────────────────────
+  --ss-card-bg:          #0f0f23;
+  --ss-card-hover-bg:    #151530;
+  --ss-card-border:      rgba(255, 255, 255, 0.07);
+
+  // ─── Input ─────────────────────────────────────────────
+  --ss-input-bg:         #151530;
+  --ss-input-border:     rgba(255, 255, 255, 0.1);
+  --ss-input-text:       #f1f5f9;
+  --ss-input-placeholder: #475569;
+  --ss-input-focus:      #7c3aed;
+
+  // ─── Scrollbar ─────────────────────────────────────────
+  --ss-scrollbar-track:  #08081a;
+  --ss-scrollbar-thumb:  #1a1a3e;
+  --ss-scrollbar-hover:  #7c3aed;
+
+  // ─── Stat card icons ───────────────────────────────────
+  --ss-stat-purple-bg: rgba(124, 58, 237, 0.2);
+  --ss-stat-cyan-bg:   rgba(6, 182, 212, 0.2);
+  --ss-stat-amber-bg:  rgba(245, 158, 11, 0.2);
+  --ss-stat-green-bg:  rgba(16, 185, 129, 0.2);
+  --ss-stat-purple:    #a78bfa;
+  --ss-stat-cyan:      #22d3ee;
+  --ss-stat-amber:     #fbbf24;
+  --ss-stat-green:     #34d399;
+
+  // ─── Auth / Landing backgrounds ────────────────────────
+  --ss-auth-left-overlay:    rgba(8, 8, 26, 0.55);
+  --ss-landing-overlay:      rgba(8, 8, 26, 0.6);
+  --ss-hero-text:            #f1f5f9;
+}

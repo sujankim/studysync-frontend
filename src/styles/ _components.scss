@@ -1,0 +1,216 @@
+// ============================================================
+// MATERIAL COMPONENT OVERRIDES
+// Uses CSS variables — automatically theme-aware
+// ============================================================
+
+// ─── Cards ───────────────────────────────────────────────────
+.mat-mdc-card {
+  background-color: var(--ss-bg-surface) !important;
+  border: 1px solid var(--ss-border) !important;
+  border-radius: var(--ss-radius-lg) !important;
+  box-shadow: var(--ss-shadow-sm) !important;
+  color: var(--ss-text-primary) !important;
+  transition: var(--ss-transition) !important;
+
+  .mat-mdc-card-title    { color: var(--ss-text-primary) !important; font-weight: 700 !important; }
+  .mat-mdc-card-subtitle { color: var(--ss-text-secondary) !important; }
+
+  &:hover {
+    box-shadow: var(--ss-shadow-md) !important;
+    border-color: var(--ss-border-md) !important;
+  }
+}
+
+// ─── Form Fields ─────────────────────────────────────────────
+.mat-mdc-form-field {
+  .mdc-text-field--outlined {
+    background-color: var(--ss-input-bg) !important;
+    border-radius: var(--ss-radius-sm) !important;
+  }
+
+  .mdc-floating-label  { color: var(--ss-text-secondary) !important; }
+  .mat-mdc-input-element { color: var(--ss-input-text) !important; }
+  .mat-icon { color: var(--ss-text-muted) !important; }
+
+  &.mat-focused .mat-icon { color: var(--ss-primary) !important; }
+
+  .mat-mdc-form-field-error { color: var(--ss-error) !important; }
+
+  // Hint text
+  .mat-mdc-form-field-hint { color: var(--ss-text-muted) !important; }
+}
+
+// ─── Buttons ─────────────────────────────────────────────────
+.mat-mdc-raised-button.mat-primary,
+.mat-mdc-flat-button.mat-primary {
+  background: var(--ss-gradient-purple) !important;
+  color: #ffffff !important;
+  border-radius: var(--ss-radius-md) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.2px !important;
+  transition: var(--ss-transition) !important;
+
+  &:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: var(--ss-shadow-brand) !important;
+  }
+
+  &:disabled { opacity: 0.55 !important; }
+}
+
+.mat-mdc-outlined-button.mat-primary {
+  border-color: var(--ss-primary) !important;
+  color: var(--ss-primary) !important;
+  border-radius: var(--ss-radius-md) !important;
+
+  &:hover { background: var(--ss-primary-glow) !important; }
+}
+
+.mat-mdc-button.mat-primary {
+  color: var(--ss-primary) !important;
+  border-radius: var(--ss-radius-md) !important;
+
+  &:hover { background: var(--ss-primary-glow) !important; }
+}
+
+// Icon buttons
+.mat-mdc-icon-button {
+  color: var(--ss-text-secondary) !important;
+  border-radius: var(--ss-radius-sm) !important;
+  transition: var(--ss-transition) !important;
+
+  &:hover {
+    background: var(--ss-primary-glow) !important;
+    color: var(--ss-primary) !important;
+  }
+}
+
+// ─── Snackbars (rendered outside DOM — must be global) ────────
+.snack-success .mdc-snackbar__surface {
+  background-color: #065f46 !important;
+  border-left: 4px solid var(--ss-success) !important;
+  color: white !important;
+}
+
+.snack-error .mdc-snackbar__surface {
+  background-color: #7f1d1d !important;
+  border-left: 4px solid var(--ss-error) !important;
+  color: white !important;
+}
+
+.snack-info .mdc-snackbar__surface {
+  background-color: #1e3a5f !important;
+  border-left: 4px solid var(--ss-info) !important;
+  color: white !important;
+}
+
+.snack-warning .mdc-snackbar__surface {
+  background-color: #78350f !important;
+  border-left: 4px solid var(--ss-warning) !important;
+  color: white !important;
+}
+
+// ─── Dialogs ─────────────────────────────────────────────────
+.mat-mdc-dialog-container {
+  .mdc-dialog__surface {
+    background-color: var(--ss-bg-elevated) !important;
+    border: 1px solid var(--ss-border) !important;
+    color: var(--ss-text-primary) !important;
+  }
+}
+
+.ss-dialog-panel .mat-mdc-dialog-container .mdc-dialog__surface {
+  border-radius: var(--ss-radius-xl) !important;
+}
+
+// ─── Menu ────────────────────────────────────────────────────
+.mat-mdc-menu-panel {
+  background-color: var(--ss-bg-elevated) !important;
+  border: 1px solid var(--ss-border) !important;
+  box-shadow: var(--ss-shadow-lg) !important;
+  min-width: 180px !important;
+}
+
+.mat-mdc-menu-item {
+  color: var(--ss-text-secondary) !important;
+  border-radius: var(--ss-radius-sm) !important;
+  margin: 2px 6px !important;
+
+  &:hover {
+    background-color: var(--ss-bg-overlay) !important;
+    color: var(--ss-text-primary) !important;
+  }
+
+  .mat-icon { color: var(--ss-text-muted) !important; }
+}
+
+// ─── Select ──────────────────────────────────────────────────
+.mat-mdc-option {
+  color: var(--ss-text-secondary) !important;
+
+  &.mdc-list-item--selected,
+  &:hover {
+    background-color: var(--ss-bg-overlay) !important;
+    color: var(--ss-primary) !important;
+  }
+}
+
+// ─── Tabs ────────────────────────────────────────────────────
+.mat-mdc-tab-group,
+.mat-mdc-tab-nav-bar {
+  .mat-mdc-tab-header {
+    border-bottom: 1px solid var(--ss-border) !important;
+    background: transparent !important;
+  }
+
+  .mat-mdc-tab {
+    color: var(--ss-text-secondary) !important;
+    font-weight: 500 !important;
+    opacity: 1 !important;
+
+    &.mdc-tab--active {
+      color: var(--ss-primary) !important;
+    }
+  }
+
+  .mdc-tab-indicator__content--underline {
+    border-color: var(--ss-primary) !important;
+    border-top-width: 2px !important;
+  }
+}
+
+// ─── Chips ───────────────────────────────────────────────────
+.mat-mdc-chip {
+  font-weight: 500 !important;
+  font-size: 12px !important;
+  height: 26px !important;
+
+  &.mat-mdc-standard-chip {
+    background-color: var(--ss-primary-glow) !important;
+    color: var(--ss-primary) !important;
+    border: 1px solid var(--ss-border-md) !important;
+  }
+}
+
+// ─── Progress Spinner ────────────────────────────────────────
+.mat-mdc-progress-spinner circle {
+  stroke: var(--ss-primary) !important;
+}
+
+// ─── Slide Toggle ────────────────────────────────────────────
+.mat-mdc-slide-toggle {
+  .mdc-switch__track { border-radius: var(--ss-radius-full) !important; }
+}
+
+// ─── Divider ─────────────────────────────────────────────────
+.mat-divider { border-top-color: var(--ss-border) !important; }
+
+// ─── Tooltip ─────────────────────────────────────────────────
+.mat-mdc-tooltip .mdc-tooltip__surface {
+  font-size: 12px !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+// ─── Select arrow ────────────────────────────────────────────
+.mat-mdc-select-arrow { color: var(--ss-text-muted) !important; }
+.mat-mdc-select-value { color: var(--ss-input-text) !important; }

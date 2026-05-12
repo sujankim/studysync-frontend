@@ -1,0 +1,127 @@
+<div class="auth-page">
+
+  <!-- Full viewport background image — visible on LEFT and RIGHT of card -->
+  <div class="auth-page__bg"
+       [style.background-image]="'url(' + bgImage() + ')'">
+  </div>
+  <div class="auth-page__overlay"></div>
+
+  <div class="auth-page__body">
+    <div class="auth-page__top">
+
+      <!-- Logo above card -->
+      <div class="auth-logo">
+        <div class="auth-logo__icon">
+          <mat-icon>auto_stories</mat-icon>
+        </div>
+        <span class="auth-logo__name">StudySync</span>
+      </div>
+
+      <!-- Card -->
+      <div class="auth-card animate-fade-in-up">
+
+        <div class="auth-card__header">
+          <h1>Welcome back! 👋</h1>
+          <p>Sign in to continue your learning journey.</p>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-label">Email or Username</label>
+            <div class="input-wrap"
+                 [class.input-wrap--error]="emailControl?.invalid && emailControl?.touched">
+              <mat-icon class="input-icon">person_outline</mat-icon>
+              <input class="form-input"
+                     type="email"
+                     formControlName="email"
+                     placeholder="Enter your email or username"
+                     autocomplete="email">
+            </div>
+            @if (emailControl?.hasError('required') && emailControl?.touched) {
+              <span class="form-error">Email is required</span>
+            }
+            @if (emailControl?.hasError('email') && emailControl?.touched) {
+              <span class="form-error">Please enter a valid email</span>
+            }
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="input-wrap"
+                 [class.input-wrap--error]="passwordControl?.invalid && passwordControl?.touched">
+              <mat-icon class="input-icon">lock_outline</mat-icon>
+              <input class="form-input"
+                     [type]="hidePassword() ? 'password' : 'text'"
+                     formControlName="password"
+                     placeholder="Enter your password"
+                     autocomplete="current-password">
+              <button class="input-toggle" type="button"
+                      (click)="hidePassword.set(!hidePassword())">
+                <mat-icon>
+                  {{ hidePassword() ? 'visibility_off' : 'visibility' }}
+                </mat-icon>
+              </button>
+            </div>
+            @if (passwordControl?.hasError('required') && passwordControl?.touched) {
+              <span class="form-error">Password is required</span>
+            }
+            <div class="form-group__footer">
+              <a href="#" class="forgot-link">Forgot password?</a>
+            </div>
+          </div>
+
+          <!-- Sign in button -->
+          <button class="btn-submit" type="submit"
+                  [disabled]="form.invalid || loading()">
+            @if (loading()) {
+              <mat-spinner diameter="20" />
+            } @else {
+              Sign in
+            }
+          </button>
+
+        </form>
+
+        <!-- Divider -->
+        <div class="auth-divider"><span>or continue with</span></div>
+
+        <!-- OAuth -->
+        <button class="social-btn" type="button" disabled>
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+               width="20" height="20" alt="Google">
+          Continue with Google
+        </button>
+
+        <button class="social-btn social-btn--github" type="button" disabled>
+          <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          Continue with GitHub
+        </button>
+
+        <p class="auth-redirect">
+          Don't have an account?
+          <a routerLink="/register">Sign up</a>
+        </p>
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="auth-footer">
+      <div class="auth-footer__links">
+        <a href="#">About</a>
+        <a href="#">Features</a>
+        <a href="#">Blog</a>
+        <a href="#">Help Center</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+      <span class="auth-footer__copy">© 2026 StudySync. All rights reserved.</span>
+    </footer>
+
+  </div>
+</div>

@@ -1,0 +1,219 @@
+@use '@angular/material' as mat;
+
+// ─── M3 Theme — applied to html element ──────────────────────
+// We define ONE theme and override colors via CSS tokens
+// This avoids compile errors with inline palette maps
+
+$studysync-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary:    mat.$violet-palette,
+    tertiary:   mat.$cyan-palette,
+  ),
+  typography: (
+    brand-family:   'Inter, Roboto, sans-serif',
+    plain-family:   'Inter, Roboto, sans-serif',
+    bold-weight:    700,
+    medium-weight:  500,
+    regular-weight: 400,
+  ),
+  density: (scale: 0),
+));
+
+// Apply base theme
+html {
+  @include mat.all-component-themes($studysync-theme);
+}
+
+// ─── LIGHT THEME — Material token overrides ──────────────────
+html,
+html[data-theme="light"] {
+  // Buttons
+  --mdc-filled-button-container-color:        #7c3aed;
+  --mdc-filled-button-label-text-color:       #ffffff;
+  --mdc-outlined-button-outline-color:        #7c3aed;
+  --mdc-outlined-button-label-text-color:     #7c3aed;
+  --mdc-text-button-label-text-color:         #7c3aed;
+
+  // Form fields
+  --mdc-outlined-text-field-outline-color:          rgba(124, 58, 237, 0.2);
+  --mdc-outlined-text-field-hover-outline-color:    rgba(124, 58, 237, 0.4);
+  --mdc-outlined-text-field-focus-outline-color:    #7c3aed;
+  --mdc-outlined-text-field-focus-label-text-color: #7c3aed;
+  --mdc-outlined-text-field-label-text-color:       #5b5b8a;
+  --mdc-outlined-text-field-input-text-color:       #1e1b4b;
+  --mdc-outlined-text-field-caret-color:            #7c3aed;
+  --mdc-outlined-text-field-container-shape:        8px;
+  --mdc-filled-text-field-container-color:          #f8f7ff;
+
+  // Progress
+  --mdc-circular-progress-active-indicator-color:   #7c3aed;
+  --mdc-linear-progress-active-indicator-color:     #7c3aed;
+
+  // Checkbox + Radio + Toggle
+  --mdc-checkbox-selected-icon-color:               #7c3aed;
+  --mdc-checkbox-selected-focus-icon-color:         #7c3aed;
+  --mdc-checkbox-selected-hover-icon-color:         #7c3aed;
+  --mdc-checkbox-selected-pressed-icon-color:       #5b21b6;
+  --mdc-radio-selected-icon-color:                  #7c3aed;
+  --mdc-radio-selected-focus-icon-color:            #7c3aed;
+  --mdc-radio-selected-hover-icon-color:            #7c3aed;
+  --mdc-switch-selected-handle-color:               #7c3aed;
+  --mdc-switch-selected-track-color:                rgba(124, 58, 237, 0.4);
+  --mdc-switch-selected-focus-handle-color:         #5b21b6;
+  --mdc-switch-selected-hover-handle-color:         #9d5cf0;
+
+  // Card
+  --mdc-elevated-card-container-color:              #ffffff;
+  --mdc-elevated-card-container-shape:              16px;
+  --mdc-outlined-card-container-color:              #ffffff;
+  --mdc-outlined-card-container-shape:              16px;
+  --mdc-outlined-card-outline-color:                rgba(124, 58, 237, 0.1);
+
+  // Dialog
+  --mdc-dialog-container-color:                     #ffffff;
+  --mdc-dialog-container-shape:                     20px;
+  --mdc-dialog-subhead-color:                       #1e1b4b;
+  --mdc-dialog-supporting-text-color:               #5b5b8a;
+
+  // Menu
+  --mat-menu-container-color:                       #ffffff;
+  --mat-menu-item-label-text-color:                 #5b5b8a;
+  --mat-menu-item-hover-state-layer-color:          rgba(124, 58, 237, 0.08);
+  --mat-menu-container-shape:                       12px;
+
+  // Select
+  --mat-select-panel-background-color:              #ffffff;
+  --mat-option-label-text-color:                    #5b5b8a;
+  --mat-option-hover-state-layer-color:             rgba(124, 58, 237, 0.08);
+  --mat-option-selected-state-label-text-color:     #7c3aed;
+
+  // Snackbar
+  --mdc-snackbar-container-color:                   #1e1b4b;
+  --mdc-snackbar-supporting-text-color:             #f1f5f9;
+  --mdc-snackbar-container-shape:                   12px;
+
+  // Tabs
+  --mat-tab-header-active-label-text-color:         #7c3aed;
+  --mat-tab-header-active-indicator-color:          #7c3aed;
+  --mat-tab-header-inactive-label-text-color:       #5b5b8a;
+
+  // Chips
+  --mdc-chip-elevated-container-color:              #ede9fe;
+  --mdc-chip-label-text-color:                      #7c3aed;
+  --mdc-chip-container-shape:                       9999px;
+
+  // Badge
+  --mat-badge-background-color:                     #7c3aed;
+  --mat-badge-text-color:                           #ffffff;
+
+  // Tooltip
+  --mdc-plain-tooltip-container-color:              #1e1b4b;
+  --mdc-plain-tooltip-supporting-text-color:        #f1f5f9;
+  --mdc-plain-tooltip-container-shape:              8px;
+
+  // Divider
+  --mat-divider-color:                              rgba(124, 58, 237, 0.1);
+
+  // Ripple
+  --mat-ripple-color:                               rgba(124, 58, 237, 0.1);
+
+  // Slide toggle
+  --mat-slide-toggle-track-outline-color:           rgba(124, 58, 237, 0.2);
+}
+
+// ─── DARK THEME — Material token overrides ───────────────────
+html[data-theme="dark"] {
+  // Buttons
+  --mdc-filled-button-container-color:        #7c3aed;
+  --mdc-filled-button-label-text-color:       #ffffff;
+  --mdc-outlined-button-outline-color:        #a78bfa;
+  --mdc-outlined-button-label-text-color:     #a78bfa;
+  --mdc-text-button-label-text-color:         #a78bfa;
+
+  // Form fields
+  --mdc-outlined-text-field-outline-color:          rgba(255, 255, 255, 0.1);
+  --mdc-outlined-text-field-hover-outline-color:    rgba(124, 58, 237, 0.5);
+  --mdc-outlined-text-field-focus-outline-color:    #7c3aed;
+  --mdc-outlined-text-field-focus-label-text-color: #a78bfa;
+  --mdc-outlined-text-field-label-text-color:       #94a3b8;
+  --mdc-outlined-text-field-input-text-color:       #f1f5f9;
+  --mdc-outlined-text-field-caret-color:            #7c3aed;
+  --mdc-outlined-text-field-container-shape:        8px;
+  --mdc-filled-text-field-container-color:          #151530;
+
+  // Progress
+  --mdc-circular-progress-active-indicator-color:   #7c3aed;
+  --mdc-linear-progress-active-indicator-color:     #7c3aed;
+
+  // Checkbox + Radio + Toggle
+  --mdc-checkbox-selected-icon-color:               #7c3aed;
+  --mdc-checkbox-selected-focus-icon-color:         #7c3aed;
+  --mdc-checkbox-selected-hover-icon-color:         #9d5cf0;
+  --mdc-checkbox-selected-pressed-icon-color:       #5b21b6;
+  --mdc-radio-selected-icon-color:                  #7c3aed;
+  --mdc-radio-selected-focus-icon-color:            #7c3aed;
+  --mdc-radio-selected-hover-icon-color:            #9d5cf0;
+  --mdc-switch-selected-handle-color:               #a78bfa;
+  --mdc-switch-selected-track-color:                rgba(124, 58, 237, 0.4);
+  --mdc-switch-selected-focus-handle-color:         #7c3aed;
+  --mdc-switch-selected-hover-handle-color:         #c4b5fd;
+
+  // Card
+  --mdc-elevated-card-container-color:              #0f0f23;
+  --mdc-elevated-card-container-shape:              16px;
+  --mdc-outlined-card-container-color:              #0f0f23;
+  --mdc-outlined-card-container-shape:              16px;
+  --mdc-outlined-card-outline-color:                rgba(255, 255, 255, 0.07);
+
+  // Dialog
+  --mdc-dialog-container-color:                     #151530;
+  --mdc-dialog-container-shape:                     20px;
+  --mdc-dialog-subhead-color:                       #f1f5f9;
+  --mdc-dialog-supporting-text-color:               #94a3b8;
+
+  // Menu
+  --mat-menu-container-color:                       #151530;
+  --mat-menu-item-label-text-color:                 #94a3b8;
+  --mat-menu-item-hover-state-layer-color:          rgba(124, 58, 237, 0.12);
+  --mat-menu-container-shape:                       12px;
+
+  // Select
+  --mat-select-panel-background-color:              #151530;
+  --mat-option-label-text-color:                    #94a3b8;
+  --mat-option-hover-state-layer-color:             rgba(124, 58, 237, 0.12);
+  --mat-option-selected-state-label-text-color:     #a78bfa;
+
+  // Snackbar
+  --mdc-snackbar-container-color:                   #1a1a3e;
+  --mdc-snackbar-supporting-text-color:             #f1f5f9;
+  --mdc-snackbar-container-shape:                   12px;
+
+  // Tabs
+  --mat-tab-header-active-label-text-color:         #a78bfa;
+  --mat-tab-header-active-indicator-color:          #7c3aed;
+  --mat-tab-header-inactive-label-text-color:       #94a3b8;
+
+  // Chips
+  --mdc-chip-elevated-container-color:              #1a1a3e;
+  --mdc-chip-label-text-color:                      #a78bfa;
+  --mdc-chip-container-shape:                       9999px;
+
+  // Badge
+  --mat-badge-background-color:                     #7c3aed;
+  --mat-badge-text-color:                           #ffffff;
+
+  // Tooltip
+  --mdc-plain-tooltip-container-color:              #1a1a3e;
+  --mdc-plain-tooltip-supporting-text-color:        #f1f5f9;
+  --mdc-plain-tooltip-container-shape:              8px;
+
+  // Divider
+  --mat-divider-color:                              rgba(255, 255, 255, 0.08);
+
+  // Ripple
+  --mat-ripple-color:                               rgba(124, 58, 237, 0.15);
+
+  // Slide toggle
+  --mat-slide-toggle-track-outline-color:           rgba(255, 255, 255, 0.15);
+}

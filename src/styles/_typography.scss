@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+// ─── Base ─────────────────────────────────────────────────────
+body {
+  font-family: 'Inter', 'Roboto', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ss-text-primary);
+  background-color: var(--ss-bg-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// ─── Headings ─────────────────────────────────────────────────
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--ss-text-primary);
+  margin: 0;
+}
+
+h1 { font-size: 2.25rem; font-weight: 800; }
+h2 { font-size: 1.75rem; }
+h3 { font-size: 1.375rem; }
+h4 { font-size: 1.125rem; }
+h5 { font-size: 1rem; }
+h6 { font-size: 0.875rem; }
+
+p  { margin: 0; line-height: 1.6; }
+a  { color: var(--ss-primary); text-decoration: none; }
+
+// ─── Text Utilities ───────────────────────────────────────────
+.text-primary   { color: var(--ss-text-primary) !important; }
+.text-secondary { color: var(--ss-text-secondary) !important; }
+.text-muted     { color: var(--ss-text-muted) !important; }
+.text-brand     { color: var(--ss-primary) !important; }
+.text-cyan      { color: var(--ss-secondary) !important; }
+.text-success   { color: var(--ss-success) !important; }
+.text-warning   { color: var(--ss-warning) !important; }
+.text-error     { color: var(--ss-error) !important; }
+.text-xs        { font-size: 0.7rem !important; }
+.text-sm        { font-size: 0.8rem !important; }
+.text-base      { font-size: 0.875rem !important; }
+.text-lg        { font-size: 1rem !important; }
+.text-xl        { font-size: 1.125rem !important; }
+.font-medium    { font-weight: 500 !important; }
+.font-semibold  { font-weight: 600 !important; }
+.font-bold      { font-weight: 700 !important; }
+.font-extrabold { font-weight: 800 !important; }
+
+// ─── Gradient Text ────────────────────────────────────────────
+.gradient-text {
+  background: var(--ss-gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-warm {
+  background: var(--ss-gradient-warm);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

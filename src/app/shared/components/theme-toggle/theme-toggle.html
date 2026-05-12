@@ -1,0 +1,28 @@
+<button
+  class="theme-toggle"
+  (click)="themeService.toggle()"
+  [matTooltip]="themeService.isDark() ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+  matTooltipPosition="right"
+  type="button"
+  [attr.aria-label]="themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode'">
+
+  <!-- Sun icon -->
+  <mat-icon class="toggle-icon toggle-icon--sun"
+            [class.active]="themeService.isLight()">
+    light_mode
+  </mat-icon>
+
+  <!-- Track -->
+  <div class="toggle-track">
+    <div class="toggle-thumb"
+         [class.dark]="themeService.isDark()">
+    </div>
+  </div>
+
+  <!-- Moon icon -->
+  <mat-icon class="toggle-icon toggle-icon--moon"
+            [class.active]="themeService.isDark()">
+    dark_mode
+  </mat-icon>
+
+</button>

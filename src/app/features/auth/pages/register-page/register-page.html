@@ -1,0 +1,165 @@
+<div class="auth-page">
+
+  <div class="auth-page__bg"
+       [style.background-image]="'url(' + bgImage() + ')'">
+  </div>
+  <div class="auth-page__overlay"></div>
+
+  <div class="auth-page__body">
+    <div class="auth-page__top">
+
+      <!-- Logo -->
+      <div class="auth-logo">
+        <div class="auth-logo__icon">
+          <mat-icon>auto_stories</mat-icon>
+        </div>
+        <span class="auth-logo__name">StudySync</span>
+      </div>
+
+      <!-- Card -->
+      <div class="auth-card animate-fade-in-up">
+
+        <div class="auth-card__header">
+          <h1>Create your StudySync account ✨</h1>
+          <p>Let's get you started on your learning journey.</p>
+        </div>
+
+        <!-- OAuth first -->
+        <button class="social-btn" type="button" disabled>
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+               width="20" height="20" alt="Google">
+          Sign up with Google
+        </button>
+
+        <button class="social-btn social-btn--github" type="button" disabled>
+          <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          Sign up with GitHub
+        </button>
+
+        <div class="auth-divider"><span>or</span></div>
+
+        <!-- Form -->
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+          <!-- Full Name -->
+          <div class="form-group">
+            <label class="form-label">Full name</label>
+            <div class="input-wrap"
+                 [class.input-wrap--error]="nameControl?.invalid && nameControl?.touched">
+              <mat-icon class="input-icon">person_outline</mat-icon>
+              <input class="form-input"
+                     formControlName="name"
+                     placeholder="Enter your full name"
+                     autocomplete="name">
+            </div>
+            @if (nameControl?.hasError('required') && nameControl?.touched) {
+              <span class="form-error">Name is required</span>
+            }
+            @if (nameControl?.hasError('minlength') && nameControl?.touched) {
+              <span class="form-error">Name must be at least 2 characters</span>
+            }
+          </div>
+
+          <!-- Username -->
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <div class="input-wrap"
+                 [class.input-wrap--error]="usernameControl?.invalid && usernameControl?.touched">
+              <mat-icon class="input-icon">alternate_email</mat-icon>
+              <input class="form-input"
+                     formControlName="username"
+                     placeholder="Choose a username"
+                     autocomplete="username">
+            </div>
+            @if (usernameControl?.hasError('required') && usernameControl?.touched) {
+              <span class="form-error">Username is required</span>
+            }
+            @if (usernameControl?.hasError('pattern') && usernameControl?.touched) {
+              <span class="form-error">Only letters, numbers and underscores</span>
+            }
+            @if (usernameControl?.hasError('minlength') && usernameControl?.touched) {
+              <span class="form-error">At least 3 characters</span>
+            }
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-label">Email address</label>
+            <div class="input-wrap"
+                 [class.input-wrap--error]="emailControl?.invalid && emailControl?.touched">
+              <mat-icon class="input-icon">mail_outline</mat-icon>
+              <input class="form-input"
+                     type="email"
+                     formControlName="email"
+                     placeholder="you@example.com"
+                     autocomplete="email">
+            </div>
+            @if (emailControl?.hasError('required') && emailControl?.touched) {
+              <span class="form-error">Email is required</span>
+            }
+            @if (emailControl?.hasError('email') && emailControl?.touched) {
+              <span class="form-error">Please enter a valid email</span>
+            }
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="input-wrap"
+                 [class.input-wrap--error]="passwordControl?.invalid && passwordControl?.touched">
+              <mat-icon class="input-icon">lock_outline</mat-icon>
+              <input class="form-input"
+                     [type]="hidePassword() ? 'password' : 'text'"
+                     formControlName="password"
+                     placeholder="Create a password"
+                     autocomplete="new-password">
+              <button class="input-toggle" type="button"
+                      (click)="hidePassword.set(!hidePassword())">
+                <mat-icon>
+                  {{ hidePassword() ? 'visibility_off' : 'visibility' }}
+                </mat-icon>
+              </button>
+            </div>
+            @if (passwordControl?.hasError('required') && passwordControl?.touched) {
+              <span class="form-error">Password is required</span>
+            }
+            @if (passwordControl?.hasError('minlength') && passwordControl?.touched) {
+              <span class="form-error">Password must be at least 8 characters</span>
+            }
+          </div>
+
+          <button class="btn-submit" type="submit"
+                  [disabled]="form.invalid || loading()">
+            @if (loading()) {
+              <mat-spinner diameter="20" />
+            } @else {
+              Sign up
+            }
+          </button>
+
+        </form>
+
+        <p class="auth-redirect">
+          Already have an account?
+          <a routerLink="/login">Log in</a>
+        </p>
+
+      </div>
+    </div>
+
+    <footer class="auth-footer">
+      <div class="auth-footer__links">
+        <a href="#">About</a>
+        <a href="#">Features</a>
+        <a href="#">Blog</a>
+        <a href="#">Help Center</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+      <span class="auth-footer__copy">© 2026 StudySync. All rights reserved.</span>
+    </footer>
+
+  </div>
+</div>

@@ -1,0 +1,298 @@
+<div class="landing-page">
+
+  <!-- ═══════════════ NAVBAR ═══════════════ -->
+  <nav class="navbar" [class.navbar--scrolled]="isScrolled()">
+    <div class="navbar__inner">
+
+      <a class="navbar__brand" routerLink="/">
+        <span class="brand-icon">📚</span>
+        <span class="brand-name">StudySync</span>
+      </a>
+
+      <ul class="navbar__links">
+        @for (link of navLinks; track link.label) {
+          <li>
+            <button class="nav-link" (click)="scrollToSection(link.fragment)">
+              {{ link.label }}
+            </button>
+          </li>
+        }
+      </ul>
+
+      <div class="navbar__actions">
+        <app-theme-toggle />
+        <a routerLink="/login"    class="btn-nav-login">Login</a>
+        <a routerLink="/register" class="btn-nav-signup">Sign up</a>
+      </div>
+
+      <button class="navbar__mobile-btn"
+              (click)="mobileMenuOpen.update(v => !v)">
+        <mat-icon>{{ mobileMenuOpen() ? 'close' : 'menu' }}</mat-icon>
+      </button>
+    </div>
+
+    @if (mobileMenuOpen()) {
+      <div class="navbar__mobile-menu animate-fade-in-down">
+        @for (link of navLinks; track link.label) {
+          <button class="mobile-nav-link"
+                  (click)="scrollToSection(link.fragment)">
+            {{ link.label }}
+          </button>
+        }
+        <div class="mobile-nav-divider"></div>
+        <a routerLink="/login"    class="mobile-nav-link">Login</a>
+        <a routerLink="/register" class="mobile-nav-link mobile-nav-link--cta">
+          Sign up free
+        </a>
+      </div>
+    }
+  </nav>
+
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <section class="hero">
+
+    <!-- Theme-aware background image via [style] binding -->
+    <div class="hero__bg"
+         [style.background-image]="'url(' + heroImage() + ')'">
+    </div>
+    <div class="hero__overlay"></div>
+
+    <div class="hero__content">
+      <div class="hero__left animate-fade-in-left">
+
+        <div class="hero__badge">
+          <span class="online-dot"></span>
+          <span>Join 50,000+ learners studying together</span>
+        </div>
+
+        <h1 class="hero__headline">
+          Learn together.<br>
+          Stay consistent.<br>
+          <span class="gradient-text">Achieve more.</span>
+        </h1>
+
+        <p class="hero__sub">
+          Find study partners, join topic-based rooms, share resources,
+          track your progress, and stay motivated with a learning
+          community that grows with you.
+        </p>
+
+        <div class="hero__cta">
+          <button class="btn-primary" (click)="goToRegister()">
+            <mat-icon>rocket_launch</mat-icon>
+            Get Started
+          </button>
+          <button class="btn-secondary" (click)="scrollToRooms()">
+            Explore Rooms
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+
+        <div class="hero__social-proof">
+          <div class="avatar-stack">
+            @for (avatar of previewAvatars; track avatar) {
+              <img [src]="avatar" alt="learner" class="avatar-item">
+            }
+          </div>
+          <span class="social-text">
+            Joined by <strong>50K+</strong> learners worldwide
+          </span>
+        </div>
+
+      </div>
+      <div class="hero__right"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ ROOMS ═══════════════ -->
+  <section class="section rooms-section" id="rooms">
+    <div class="section__inner">
+
+      <div class="section__header">
+        <div>
+          <h2 class="section__title">Popular Study Rooms</h2>
+          <p class="section__subtitle">
+            Discover active rooms and start learning with others instantly.
+          </p>
+        </div>
+        <a routerLink="/rooms" class="btn-text-link">
+          View all rooms
+          <mat-icon>arrow_forward</mat-icon>
+        </a>
+      </div>
+
+      <div class="rooms-grid animate-stagger">
+        @for (room of popularRooms; track room.id) {
+          <div class="room-preview-card hover-lift">
+
+            <div class="room-card__bar" [class]="'bar-' + room.color"></div>
+
+            <div class="room-card__body">
+              <div class="room-card__top">
+                <div class="room-emoji" [class]="'emoji-bg-' + room.color">
+                  {{ room.emoji }}
+                </div>
+                <div class="room-info">
+                  <h3 class="room-name">{{ room.name }}</h3>
+                  <span class="room-members">
+                    <mat-icon>group</mat-icon>
+                    {{ room.members | number }} members
+                  </span>
+                </div>
+              </div>
+
+              <div class="room-tags">
+                <span class="tag-pill" [class]="'tag-' + room.color">
+                  {{ room.topic }}
+                </span>
+                <span class="tag-pill tag-purple">{{ room.level }}</span>
+              </div>
+
+              <a routerLink="/register" class="room-join-btn">
+                Join Room
+                <mat-icon>arrow_forward</mat-icon>
+              </a>
+            </div>
+
+          </div>
+        }
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════ STATS ═══════════════ -->
+  <section class="stats-bar">
+    <div class="stats-bar__inner">
+      @for (stat of stats; track stat.label) {
+        <div class="stat-item">
+          <span class="stat-emoji">{{ stat.emoji }}</span>
+          <span class="stat-value">{{ stat.value }}</span>
+          <span class="stat-label">{{ stat.label }}</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- ═══════════════ FEATURES ═══════════════ -->
+  <section class="section features-section" id="features">
+    <div class="section__inner">
+
+      <div class="section__header section__header--center">
+        <h2 class="section__title">
+          Everything you need to
+          <span class="gradient-text">learn better</span>
+        </h2>
+        <p class="section__subtitle">
+          StudySync helps you build habits, learn in groups, and stay accountable.
+        </p>
+      </div>
+
+      <div class="features-grid animate-stagger">
+        @for (feature of features; track feature.title) {
+          <div class="feature-card hover-lift">
+            <div class="feature-icon" [class]="'feature-icon--' + feature.color">
+              <mat-icon>{{ feature.icon }}</mat-icon>
+            </div>
+            <h3 class="feature-title">{{ feature.title }}</h3>
+            <p class="feature-desc">{{ feature.description }}</p>
+          </div>
+        }
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════ CTA ═══════════════ -->
+  <section class="cta-banner" id="pricing">
+    <div class="cta-banner__inner">
+      <div class="cta-banner__glow"></div>
+      <div class="cta-banner__content">
+        <h2 class="cta-title">
+          Ready to start your
+          <span class="gradient-text">learning journey?</span>
+        </h2>
+        <p class="cta-subtitle">
+          Join thousands of learners. Free forever. No credit card needed.
+        </p>
+        <div class="cta-actions">
+          <button class="btn-primary btn-primary--lg"
+                  (click)="goToRegister()">
+            <mat-icon>rocket_launch</mat-icon>
+            Start Learning Free
+          </button>
+          <span class="cta-note">
+            ✓ Free plan &nbsp; ✓ No credit card &nbsp; ✓ Instant access
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ BLOG ═══════════════ -->
+  <section class="section info-section" id="blog">
+    <div class="section__inner section__inner--narrow">
+      <h2 class="section__title">From the Blog</h2>
+      <p class="section__subtitle">
+        Productivity, study strategies, room highlights, and learning tips — coming soon.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer class="footer" id="about">
+    <div class="footer__inner">
+
+      <div class="footer__brand">
+        <div class="footer-logo">
+          <span class="brand-icon">📚</span>
+          <span class="brand-name">StudySync</span>
+        </div>
+        <p class="footer-tagline">
+          Learn together. Stay consistent. Achieve more.
+        </p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Twitter">
+            <mat-icon>alternate_email</mat-icon>
+          </a>
+          <a href="#" class="social-link" aria-label="GitHub">
+            <mat-icon>code</mat-icon>
+          </a>
+          <a href="#" class="social-link" aria-label="LinkedIn">
+            <mat-icon>work</mat-icon>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer__links">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="#">Features</a>
+          <a href="#">Study Rooms</a>
+          <a href="#">Analytics</a>
+          <a href="#">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="#">About</a>
+          <a href="#">Blog</a>
+          <a href="#">Careers</a>
+          <a href="#">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Cookies</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer__bottom">
+      <span>© 2026 StudySync. Built with ❤️ for learners.</span>
+      <span>Made by Sujan Lamichhane</span>
+    </div>
+  </footer>
+
+</div>
