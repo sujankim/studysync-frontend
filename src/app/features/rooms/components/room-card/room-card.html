@@ -1,0 +1,79 @@
+<div class="room-card"
+     [class.room-card--member]="room.isMember">
+
+  <!-- Top: emoji + topic + private badge -->
+  <div class="room-card__top">
+    <div class="room-card__emoji">{{ getEmoji() }}</div>
+
+    <div class="room-card__badges">
+      <span class="room-badge room-badge--topic">{{ room.topic }}</span>
+
+      @if (room.isPrivate) {
+        <span class="room-badge room-badge--private">
+          <mat-icon>lock</mat-icon>
+          Private
+        </span>
+      }
+    </div>
+
+    <!-- Owner actions -->
+    @if (isOwner) {
+      <button class="room-card__delete"
+              mat-icon-button
+              matTooltip="Delete room"
+              (click)="deleteClicked.emit(room); $event.stopPropagation()">
+        <mat-icon>delete_outline</mat-icon>
+      </button>
+    }
+  </div>
+
+  <!-- Name + description -->
+  <h3 class="room-card__name">{{ room.name }}</h3>
+
+  @if (room.description) {
+    <p class="room-card__desc">{{ room.description }}</p>
+  }
+
+  <!-- Tags -->
+  @if (room.tags.length > 0) {
+    <div class="room-card__tags">
+      @for (tag of room.tags.slice(0, 3); track tag) {
+        <span class="room-tag">{{ tag }}</span>
+      }
+    </div>
+  }
+
+  <!-- Footer: members + action -->
+  <div class="room-card__footer">
+    <div class="room-card__members">
+      <mat-icon>group</mat-icon>
+      <span>{{ room.memberCount }} / {{ room.maxMembers }}</span>
+    </div>
+
+    <!-- Action button -->
+    @if (room.isMember) {
+      <div class="room-card__actions">
+        <a class="btn-enter"
+           [routerLink]="['/rooms', room.id]">
+          Enter
+          <mat-icon>arrow_forward</mat-icon>
+        </a>
+
+        @if (!isOwner) {
+          <button class="btn-leave"
+                  mat-icon-button
+                  matTooltip="Leave room"
+                  (click)="leaveClicked.emit(room); $event.stopPropagation()">
+            <mat-icon>exit_to_app</mat-icon>
+          </button>
+        }
+      </div>
+    } @else {
+      <button class="btn-join"
+              (click)="joinClicked.emit(room)">
+        Join Room
+      </button>
+    }
+  </div>
+
+</div>

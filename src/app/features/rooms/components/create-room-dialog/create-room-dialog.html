@@ -1,0 +1,139 @@
+<div class="dialog">
+
+  <!-- Header -->
+  <div class="dialog__header">
+    <div class="dialog__icon">🏠</div>
+    <div class="dialog__titles">
+      <h2>Create Study Room</h2>
+      <p>Build a space for your learning community</p>
+    </div>
+    <button class="dialog__close" mat-icon-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Content -->
+  <mat-dialog-content class="dialog__body">
+    <form [formGroup]="form" id="createRoomForm" (ngSubmit)="onSubmit()">
+
+      <!-- Room Name -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Room Name</mat-label>
+        <mat-icon matPrefix>meeting_room</mat-icon>
+        <input matInput formControlName="name"
+               placeholder="e.g. Java Champions">
+        @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+          <mat-error>Room name is required</mat-error>
+        }
+        @if (form.get('name')?.hasError('minlength') && form.get('name')?.touched) {
+          <mat-error>At least 3 characters</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Topic -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Topic</mat-label>
+        <mat-icon matPrefix>category</mat-icon>
+        <mat-select formControlName="topic">
+          @for (topic of topics; track topic) {
+            <mat-option [value]="topic">{{ topic }}</mat-option>
+          }
+        </mat-select>
+        @if (form.get('topic')?.hasError('required') && form.get('topic')?.touched) {
+          <mat-error>Please select a topic</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Description -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description (optional)</mat-label>
+        <textarea matInput formControlName="description"
+                  rows="3"
+                  placeholder="What will you study in this room?">
+        </textarea>
+      </mat-form-field>
+
+      <!-- Tags -->
+      <div class="tags-field">
+        <label class="tags-label">
+          Tags
+          <span class="tags-count">{{ tags().length }}/5</span>
+        </label>
+
+        <!-- Existing tags -->
+        @if (tags().length > 0) {
+          <div class="tags-list">
+            @for (tag of tags(); track tag) {
+              <span class="tag-item">
+                {{ tag }}
+                <button type="button" (click)="removeTag(tag)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </span>
+            }
+          </div>
+        }
+
+        <!-- Tag input -->
+        <div class="tags-input-wrap">
+          <mat-icon>label_outline</mat-icon>
+          <input #tagInputEl
+                 class="tags-input"
+                 [(ngModel)]="tagInput"
+                 [ngModelOptions]="{ standalone: true }"
+                 placeholder="Type tag, press Enter..."
+                 (keydown)="onTagKeydown($event, tagInputEl)"
+                 [disabled]="tags().length >= 5">
+        </div>
+        <span class="tags-hint">Press Enter or comma to add a tag</span>
+      </div>
+
+      <!-- Settings row -->
+      <div class="settings-row">
+
+        <!-- Max members -->
+        <mat-form-field appearance="outline" class="settings-field">
+          <mat-label>Max Members</mat-label>
+          <mat-icon matPrefix>group</mat-icon>
+          <input matInput type="number"
+                 formControlName="maxMembers">
+        </mat-form-field>
+
+        <!-- Private toggle -->
+        <div class="private-toggle">
+          <mat-icon>lock_outline</mat-icon>
+          <span>Private Room</span>
+          <mat-slide-toggle formControlName="isPrivate" />
+        </div>
+
+      </div>
+
+      @if (form.get('isPrivate')?.value) {
+        <div class="private-notice">
+          <mat-icon>info_outline</mat-icon>
+          An invite code will be generated automatically.
+        </div>
+      }
+
+    </form>
+  </mat-dialog-content>
+
+  <!-- Actions -->
+  <mat-dialog-actions class="dialog__actions">
+    <button mat-stroked-button mat-dialog-close class="btn-cancel">
+      Cancel
+    </button>
+    <button mat-flat-button
+            form="createRoomForm"
+            type="submit"
+            class="btn-create"
+            [disabled]="form.invalid || loading()">
+      @if (loading()) {
+        <mat-spinner diameter="18" />
+      } @else {
+        Create Room
+      }
+    </button>
+  </mat-dialog-actions>
+
+</div>

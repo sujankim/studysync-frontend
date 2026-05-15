@@ -27,13 +27,13 @@
 .dashboard__inner {
   display: flex;
   gap: 1.5rem;
-  padding: 1.75rem 1.75rem 1.75rem 1.75rem;
+  padding: 1.75rem;
   max-width: 1400px;
   margin: 0 auto;
   align-items: flex-start;
 }
 
-// ─── MAIN CONTENT ─────────────────────────────────────────────
+// ─── MAIN ─────────────────────────────────────────────────────
 .dashboard__main {
   flex: 1;
   min-width: 0;
@@ -62,6 +62,7 @@
 .dash-subtext {
   font-size: 0.875rem;
   color: var(--ss-text-secondary);
+  margin: 0;
 }
 
 .btn-upgrade {
@@ -72,15 +73,15 @@
   border-radius: var(--ss-radius-md);
   background: var(--ss-gradient-purple);
   color: #fff;
-  border: none;
+  text-decoration: none;
   font-family: 'Inter', sans-serif;
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  text-decoration: none;
   transition: var(--ss-transition);
   box-shadow: var(--ss-shadow-brand);
   white-space: nowrap;
+  border: none;
 
   &:hover {
     transform: translateY(-1px);
@@ -122,11 +123,7 @@
     align-items: center;
     justify-content: center;
 
-    mat-icon {
-      font-size: 1.25rem;
-      width: 1.25rem;
-      height: 1.25rem;
-    }
+    mat-icon { font-size: 1.25rem; width: 1.25rem; height: 1.25rem; }
 
     &--purple { background: var(--ss-stat-purple-bg); color: var(--ss-stat-purple); }
     &--cyan   { background: var(--ss-stat-cyan-bg);   color: var(--ss-stat-cyan);   }
@@ -166,13 +163,12 @@
 
     mat-icon { font-size: 12px; width: 12px; height: 12px; }
 
-    &--down { color: var(--ss-error); }
-
+    &--down   { color: var(--ss-error); }
     &--streak { color: var(--ss-warning); }
   }
 }
 
-// ─── CHARTS ROW ───────────────────────────────────────────────
+// ─── CHARTS ───────────────────────────────────────────────────
 .charts-row {
   display: flex;
   gap: 1rem;
@@ -185,7 +181,7 @@
   border-radius: var(--ss-radius-lg);
   padding: 1.25rem;
 
-  &--wide  { flex: 1; min-width: 0; }
+  &--wide   { flex: 1; min-width: 0; }
   &--narrow { width: 260px; min-width: 260px; }
 
   &__header {
@@ -221,13 +217,10 @@
   height: 180px;
   position: relative;
 
-  canvas {
-    width: 100% !important;
-    height: 100% !important;
-  }
+  canvas { width: 100% !important; height: 100% !important; }
 }
 
-// Streak donut
+// Donut
 .streak-donut {
   display: flex;
   justify-content: center;
@@ -239,10 +232,7 @@
   height: 140px;
   position: relative;
 
-  canvas {
-    width: 140px !important;
-    height: 140px !important;
-  }
+  canvas { width: 140px !important; height: 140px !important; }
 }
 
 .streak-donut__center {
@@ -255,40 +245,18 @@
   pointer-events: none;
 }
 
-.streak-days {
-  font-size: 2rem;
-  font-weight: 900;
-  color: var(--ss-text-primary);
-  line-height: 1;
-}
+.streak-days  { font-size: 2rem; font-weight: 900; color: var(--ss-text-primary); line-height: 1; }
+.streak-label { font-size: 0.75rem; color: var(--ss-text-muted); margin-top: 2px; }
 
-.streak-label {
-  font-size: 0.75rem;
-  color: var(--ss-text-muted);
-  margin-top: 2px;
-}
-
-.streak-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
+.streak-stats { display: flex; flex-direction: column; gap: 0.6rem; }
 
 .streak-stat {
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  &__label {
-    font-size: 0.78rem;
-    color: var(--ss-text-secondary);
-  }
-
-  &__value {
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: var(--ss-text-primary);
-  }
+  &__label { font-size: 0.78rem; color: var(--ss-text-secondary); }
+  &__value { font-size: 0.875rem; font-weight: 700; color: var(--ss-text-primary); }
 }
 
 // ─── SECTION HEADER ───────────────────────────────────────────
@@ -323,13 +291,40 @@
 }
 
 // ─── ROOMS GRID ───────────────────────────────────────────────
+.rooms-empty {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  background: var(--ss-bg-surface);
+  border: 1px solid var(--ss-border);
+  border-radius: var(--ss-radius-lg);
+  font-size: 0.875rem;
+  color: var(--ss-text-secondary);
+
+  span { font-size: 1.5rem; }
+
+  p { margin: 0; flex: 1; }
+
+  &__link {
+    color: var(--ss-primary);
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover { text-decoration: underline; }
+  }
+}
+
 .rooms-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
 }
 
+// Dashboard mini room card
 .room-card {
+  background: var(--ss-bg-surface);
   border: 1px solid var(--ss-border);
   border-radius: var(--ss-radius-lg);
   padding: 1.25rem;
@@ -356,7 +351,6 @@
   &__online {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
   }
 
   &__name {
@@ -364,6 +358,9 @@
     font-weight: 700;
     color: var(--ss-text-primary);
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__members {
@@ -447,11 +444,7 @@
 }
 
 // Friends
-.friends-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
+.friends-list { display: flex; flex-direction: column; gap: 0.75rem; }
 
 .friend-item {
   display: flex;
@@ -475,19 +468,15 @@
 }
 
 .friend-dot {
-  position: absolute;
-  bottom: 0;
-  right: 0;
+  position: absolute !important;
+  bottom: 0 !important;
+  right: 0 !important;
   width: 9px !important;
   height: 9px !important;
-  border: 1.5px solid var(--ss-bg-surface);
+  border: 1.5px solid var(--ss-bg-surface) !important;
 }
 
-.friend-info {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
+.friend-info { display: flex; flex-direction: column; min-width: 0; }
 
 .friend-name {
   font-size: 0.82rem;
@@ -507,11 +496,7 @@
 }
 
 // Leaderboard
-.leaderboard-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
+.leaderboard-list { display: flex; flex-direction: column; gap: 0.5rem; }
 
 .lb-item {
   display: flex;
@@ -575,7 +560,7 @@
   white-space: nowrap;
 }
 
-// Upgrade card
+// Upgrade
 .upgrade-card {
   background: linear-gradient(
     135deg,
@@ -627,15 +612,11 @@
   .stat-grid  { grid-template-columns: repeat(2, 1fr); }
   .rooms-grid { grid-template-columns: repeat(2, 1fr); }
 
-  .chart-card--narrow {
-    width: 220px;
-    min-width: 220px;
-  }
+  .chart-card--narrow { width: 220px; min-width: 220px; }
 }
 
 @media (max-width: 1024px) {
   .dashboard__right { display: none; }
-
   .dashboard__inner { padding: 1.5rem; }
 }
 
@@ -644,9 +625,7 @@
   .rooms-grid     { grid-template-columns: repeat(2, 1fr); }
   .charts-row     { flex-direction: column; }
   .chart-card--narrow { width: 100%; min-width: unset; }
-
   .dash-greeting  { font-size: 1.35rem; }
-
   .dashboard__inner { padding: 1rem; }
 }
 

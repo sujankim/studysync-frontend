@@ -6,28 +6,23 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./features/landing/landing-page/landing-page')
-        .then((m) => m.LandingPage),
+      import('./features/landing/landing-page/landing-page').then((m) => m.LandingPage),
   },
   {
     path: 'login',
     loadComponent: () =>
-      import('./features/auth/pages/login-page/login-page')
-        .then((m) => m.LoginPage),
+      import('./features/auth/pages/login-page/login-page').then((m) => m.LoginPage),
   },
   {
     path: 'register',
     loadComponent: () =>
-      import('./features/auth/pages/register-page/register-page')
-        .then((m) => m.RegisterPage),
+      import('./features/auth/pages/register-page/register-page').then((m) => m.RegisterPage),
   },
 
   // ─── PROTECTED — inside App Shell ─────────────────────────
   {
     path: '',
-    loadComponent: () =>
-      import('./layout/app-shell/app-shell')
-        .then((m) => m.AppShell),
+    loadComponent: () => import('./layout/app-shell/app-shell').then((m) => m.AppShell),
     canActivate: [authGuard],
     children: [
       // Default redirect
@@ -43,62 +38,50 @@ export const routes: Routes = [
       {
         path: 'rooms',
         loadComponent: () =>
-          import('./features/rooms/pages/rooms-page/rooms-page')
-            .then((m) => m.RoomsPage),
+          import('./features/rooms/pages/rooms-page/rooms-page').then((m) => m.RoomsPage),
+      },
+      {
+        path: 'rooms/:roomId',
+        loadComponent: () =>
+          import('./features/rooms/components/room-detail-page/room-detail-page').then(
+            (m) => m.RoomDetailPage,
+          ),
       },
       {
         path: 'messages',
-        loadComponent: () =>
-          import('./features/stubs/stubs')
-            .then((m) => m.StubPage),
+        loadComponent: () => import('./features/stubs/stubs').then((m) => m.StubPage),
       },
       {
         path: 'resources',
-        loadComponent: () =>
-          import('./features/stubs/stubs')
-            .then((m) => m.StubPage),
+        loadComponent: () => import('./features/stubs/stubs').then((m) => m.StubPage),
       },
       {
         path: 'calendar',
-        loadComponent: () =>
-          import('./features/stubs/stubs')
-            .then((m) => m.StubPage),
+        loadComponent: () => import('./features/stubs/stubs').then((m) => m.StubPage),
       },
       {
         path: 'analytics',
-        loadComponent: () =>
-          import('./features/stubs/stubs')
-            .then((m) => m.StubPage),
+        loadComponent: () => import('./features/stubs/stubs').then((m) => m.StubPage),
       },
       {
         path: 'leaderboard',
-        loadComponent: () =>
-          import('./features/stubs/stubs')
-            .then((m) => m.StubPage),
+        loadComponent: () => import('./features/stubs/stubs').then((m) => m.StubPage),
       },
       {
         path: 'friends',
-        loadComponent: () =>
-          import('./features/stubs/stubs')
-            .then((m) => m.StubPage),
+        loadComponent: () => import('./features/stubs/stubs').then((m) => m.StubPage),
       },
       {
         path: 'notifications',
-        loadComponent: () =>
-          import('./features/stubs/stubs')
-            .then((m) => m.StubPage),
+        loadComponent: () => import('./features/stubs/stubs').then((m) => m.StubPage),
       },
       {
         path: 'settings',
-        loadComponent: () =>
-          import('./features/stubs/stubs')
-            .then((m) => m.StubPage),
+        loadComponent: () => import('./features/stubs/stubs').then((m) => m.StubPage),
       },
       {
         path: 'profile',
-        loadComponent: () =>
-          import('./features/stubs/stubs')
-            .then((m) => m.StubPage),
+        loadComponent: () => import('./features/stubs/stubs').then((m) => m.StubPage),
       },
     ],
   },

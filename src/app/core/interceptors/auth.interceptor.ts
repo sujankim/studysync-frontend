@@ -15,23 +15,28 @@ export const authInterceptor: HttpInterceptorFn = (
   const authService = inject(AuthService);
   const token = authService.getAccessToken();
 
-  // Attach access token if available
-  const authReq = token ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
+  // Attach access token to every request (if we have one)
+  const authReq =
+    token ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      // 401 on a non-auth endpoint → try refresh
+      // Got 401 on a NON-auth endpoint
+      // This means the access token expired mid-session
+      // Try to refresh it silently
       if (error.status === 401 && !req.url.includes('/auth/')) {
         return authService.refresh().pipe(
           switchMap((response) => {
-            // Retry the original request with the new token
+            // Got new access token → retry the original request
             const retryReq = req.clone({
-              setHeaders: { Authorization: `Bearer ${response.accessToken}` },
+              setHeaders: {
+                Authorization: `Bearer ${response.accessToken}`,
+              },
             });
             return next(retryReq);
           }),
           catchError((refreshError) => {
-            // Refresh also failed → log out
+            // Refresh also failed → force logout
             authService.clearSession();
             return throwError(() => refreshError);
           }),

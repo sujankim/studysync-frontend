@@ -23,8 +23,12 @@ import {
 } from '../../../../core/models/dashboard.model';
 import { DashboardService } from '../../../../core/services/dashboard.service';
 import { TotalMinutesPipe } from '../../../../shared/pipes/total-minutes.pipe';
+import {
+  StudyRoomResponse,
+  getTopicEmoji, // ✅ Fix 3 — imported
+} from '../../../../core/models/room.model';
+import { RoomService } from '../../../../core/services/room.service';
 
-// Register all Chart.js components
 Chart.register(...registerables);
 
 @Component({
@@ -38,45 +42,23 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
   private readonly dashboardService = inject(DashboardService);
   private readonly authService = inject(AuthService);
   readonly themeService = inject(ThemeService);
+  private readonly roomService = inject(RoomService);
 
-  // ─── State ────────────────────────────────────────────────
   stats = signal<DashboardStats | null>(null);
   loading = signal(true);
 
-  // ─── Chart refs ───────────────────────────────────────────
   @ViewChild('weeklyChart') weeklyChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('streakChart') streakChartRef!: ElementRef<HTMLCanvasElement>;
 
   private weeklyChart?: Chart;
   private streakChart?: Chart;
 
-  // ─── Mocks (TODO: Phase 11 Friends, Phase 8 Leaderboard) ──
   readonly onlineFriends = MOCK_ONLINE_FRIENDS;
   readonly leaderboard = MOCK_LEADERBOARD;
 
-  // ─── My Rooms (TODO: Phase 5 Rooms API) ───────────────────
-  readonly myRooms = [
-    { id: 1, name: 'Java Champions', members: 24, topic: 'Java', emoji: '☕', color: 'amber' },
-    { id: 2, name: 'DSA Grind', members: 18, topic: 'DSA', emoji: '🧮', color: 'purple' },
-    {
-      id: 3,
-      name: 'System Design Hub',
-      members: 15,
-      topic: 'System Design',
-      emoji: '🏗️',
-      color: 'cyan',
-    },
-    {
-      id: 4,
-      name: 'Spring Boot Ninjas',
-      members: 12,
-      topic: 'Spring Boot',
-      emoji: '🍃',
-      color: 'green',
-    },
-  ];
+  // signal used correctly as signal<T>
+  myRooms = signal<StudyRoomResponse[]>([]);
 
-  // ─── User greeting ────────────────────────────────────────
   user = this.authService.currentUser;
 
   greeting = computed(() => {
@@ -92,43 +74,42 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
     return name.split(' ')[0];
   });
 
-  todayDate = computed(() => {
-    return new Date().toLocaleDateString('en-US', {
+  todayDate = computed(() =>
+    new Date().toLocaleDateString('en-US', {
       weekday: 'long',
       month: 'long',
       day: 'numeric',
-    });
-  });
+    }),
+  );
 
-  // ─── Lifecycle ────────────────────────────────────────────
   ngOnInit(): void {
     this.loadStats();
+    this.roomService.getMyRooms().subscribe({
+      next: (rooms) => this.myRooms.set(rooms.slice(0, 4)),
+      error: () => {},
+    });
   }
 
-  ngAfterViewInit(): void {
-    // Charts drawn after data loads (see loadStats)
-  }
+  ngAfterViewInit(): void {}
 
   ngOnDestroy(): void {
     this.weeklyChart?.destroy();
     this.streakChart?.destroy();
   }
 
-  // ─── Load Data ────────────────────────────────────────────
   loadStats(): void {
     this.loading.set(true);
+
     this.dashboardService.getStats().subscribe({
       next: (data) => {
         this.stats.set(data);
         this.loading.set(false);
-        // Small delay to ensure canvas elements are rendered
         setTimeout(() => {
           this.buildWeeklyChart(data);
           this.buildStreakChart(data);
         }, 50);
       },
       error: () => {
-        // Load with zeroed data so charts still render
         const empty: DashboardStats = {
           studyTimeToday: '0m',
           studyMinutesToday: 0,
@@ -157,7 +138,11 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  // ─── Charts ───────────────────────────────────────────────
+  // getTopicEmoji now imported, no error
+  getEmojiForRoom(topic: string): string {
+    return getTopicEmoji(topic);
+  }
+
   private buildWeeklyChart(data: DashboardStats): void {
     if (!this.weeklyChartRef?.nativeElement) return;
     this.weeklyChart?.destroy();
@@ -165,10 +150,8 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
     const isDark = this.themeService.isDark();
     const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(124,58,237,0.08)';
     const labelColor = isDark ? '#94a3b8' : '#5b5b8a';
-
     const ctx = this.weeklyChartRef.nativeElement.getContext('2d')!;
 
-    // Purple gradient fill
     const gradient = ctx.createLinearGradient(0, 0, 0, 200);
     gradient.addColorStop(0, 'rgba(124,58,237,0.35)');
     gradient.addColorStop(1, 'rgba(124,58,237,0.0)');
@@ -206,7 +189,7 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
             borderWidth: 1,
             padding: 10,
             callbacks: {
-              label: (ctx) => ` ${ctx.parsed.y} min`,
+              label: (c) => ` ${c.parsed.y} min`,
             },
           },
         },
@@ -237,14 +220,13 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
 
     const pct =
       data.longestStreak > 0 ? Math.min((data.currentStreak / data.longestStreak) * 100, 100) : 0;
-    const remaining = 100 - pct;
 
     this.streakChart = new Chart(this.streakChartRef.nativeElement, {
       type: 'doughnut',
       data: {
         datasets: [
           {
-            data: [pct, remaining],
+            data: [pct, 100 - pct],
             backgroundColor: [
               '#7c3aed',
               this.themeService.isDark() ? 'rgba(255,255,255,0.06)' : 'rgba(124,58,237,0.08)',
@@ -258,12 +240,14 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
         responsive: true,
         maintainAspectRatio: false,
         cutout: '78%',
-        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false },
+        },
       },
     });
   }
 
-  // ─── Helpers ──────────────────────────────────────────────
   getRoomColor(color: string): string {
     const map: Record<string, string> = {
       purple: 'var(--ss-stat-purple-bg)',

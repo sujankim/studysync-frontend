@@ -1,7 +1,144 @@
-<div class="stub-page">
-  <div style="text-align:center; padding: 2rem;">
-    <div style="font-size:3.5rem; margin-bottom:1.25rem">🏠</div>
-    <h2 style="color: var(--ss-text-primary); margin-bottom: 0.5rem">Study Rooms</h2>
-    <p style="color: var(--ss-text-secondary)">Coming in Phase 5!</p>
+<div class="rooms-page">
+
+  <!-- ─── PAGE HEADER ─────────────────────────────────── -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Browse Study Rooms</h1>
+      <p class="page-sub">
+        Discover rooms and learners studying together.
+      </p>
+    </div>
+
+    <button class="btn-create" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon>
+      Create Room
+    </button>
   </div>
+
+  <!-- ─── SEARCH ──────────────────────────────────────── -->
+  <div class="search-wrap">
+    <mat-icon class="search-icon">search</mat-icon>
+    <input class="search-input"
+           type="text"
+           placeholder="Search rooms, topics, tags..."
+           (input)="onSearch($any($event.target).value)">
+  </div>
+
+  <!-- ─── TABS ────────────────────────────────────────── -->
+  <div class="tabs-row">
+    <div class="tab-pills">
+      <button class="tab-pill"
+              [class.active]="activeTab() === 'all'"
+              (click)="activeTab.set('all')">
+        All Rooms
+        <span class="tab-count">{{ totalItems() }}</span>
+      </button>
+
+      <button class="tab-pill"
+              [class.active]="activeTab() === 'my'"
+              (click)="activeTab.set('my')">
+        My Rooms
+        @if (myRooms().length > 0) {
+          <span class="tab-count">{{ myRooms().length }}</span>
+        }
+      </button>
+    </div>
+  </div>
+
+  <!-- ─── TOPIC FILTER (All Rooms only) ───────────────── -->
+  @if (activeTab() === 'all') {
+    <div class="topic-filter">
+      @for (topic of topics; track topic) {
+        <button class="topic-chip"
+                [class.active]="activeTopic() === topic"
+                (click)="onTopicFilter(topic)">
+          {{ topic }}
+        </button>
+      }
+    </div>
+  }
+
+  <!-- ─── ALL ROOMS ───────────────────────────────────── -->
+  @if (activeTab() === 'all') {
+
+    @if (loading()) {
+      <div class="loading-state">
+        <mat-spinner diameter="44" />
+        <p>Loading rooms...</p>
+      </div>
+    } @else if (allRooms().length === 0) {
+      <div class="empty-state">
+        <span class="empty-icon">🔍</span>
+        <h3>No rooms found</h3>
+        <p>Try a different search or topic, or create the first room!</p>
+        <button class="btn-create" (click)="openCreateDialog()">
+          <mat-icon>add</mat-icon>
+          Create a Room
+        </button>
+      </div>
+    } @else {
+      <div class="rooms-grid animate-stagger">
+        @for (room of allRooms(); track room.id) {
+          <app-room-card
+            [room]="room"
+            (joinClicked)="onJoin($event)"
+            (leaveClicked)="onLeave($event)"
+            (deleteClicked)="onDelete($event)" />
+        }
+      </div>
+
+      <!-- Pagination -->
+      @if (totalPages() > 1) {
+        <div class="pagination">
+          <button class="page-btn"
+                  [disabled]="currentPage() === 0"
+                  (click)="prevPage()">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <span class="page-info">
+            Page {{ currentPage() + 1 }} of {{ totalPages() }}
+          </span>
+          <button class="page-btn"
+                  [disabled]="currentPage() >= totalPages() - 1"
+                  (click)="nextPage()">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+      }
+    }
+
+  }
+
+  <!-- ─── MY ROOMS ────────────────────────────────────── -->
+  @if (activeTab() === 'my') {
+
+    @if (myLoading()) {
+      <div class="loading-state">
+        <mat-spinner diameter="44" />
+        <p>Loading your rooms...</p>
+      </div>
+    } @else if (myRooms().length === 0) {
+      <div class="empty-state">
+        <span class="empty-icon">🏠</span>
+        <h3>You haven't joined any rooms yet</h3>
+        <p>Browse all rooms and join your first study group!</p>
+        <button class="tab-pill active"
+                (click)="activeTab.set('all')">
+          Browse Rooms
+        </button>
+      </div>
+    } @else {
+      <div class="rooms-grid animate-stagger">
+        @for (room of myRooms(); track room.id) {
+          <app-room-card
+            [room]="room"
+            (joinClicked)="onJoin($event)"
+            (leaveClicked)="onLeave($event)"
+            (deleteClicked)="onDelete($event)" />
+        }
+      </div>
+    }
+
+  }
+
 </div>
