@@ -1,6 +1,5 @@
 <div class="room-detail">
 
-  <!-- ═══ LOADING ══════════════════════════════════════════ -->
   @if (loadingRoom()) {
     <div class="room-detail__loading">
       <div class="loading-spinner"></div>
@@ -10,10 +9,9 @@
   @if (!loadingRoom() && room()) {
     <div class="room-layout">
 
-      <!-- ═══ SIDEBAR (Members) ════════════════════════════ -->
+      <!-- ═══ SIDEBAR ══════════════════════════════════════ -->
       <aside class="room-sidebar">
 
-        <!-- Room info -->
         <div class="room-info">
           <span class="room-emoji">{{ getEmoji() }}</span>
           <div>
@@ -22,20 +20,18 @@
           </div>
         </div>
 
-        <!-- Connection status -->
         <div class="ws-status"
              [class.ws-status--connected]="wsService.status() === 'CONNECTED'"
              [class.ws-status--error]="wsService.status() === 'ERROR'">
           <span class="ws-dot"></span>
           @switch (wsService.status()) {
-            @case ('CONNECTED')    { <span>Connected</span> }
-            @case ('CONNECTING')   { <span>Connecting...</span> }
-            @case ('ERROR')        { <span>Connection error</span> }
-            @default               { <span>Disconnected</span> }
+            @case ('CONNECTED')  { <span>Connected</span> }
+            @case ('CONNECTING') { <span>Connecting...</span> }
+            @case ('ERROR')      { <span>Connection error</span> }
+            @default             { <span>Disconnected</span> }
           }
         </div>
 
-        <!-- Members list -->
         <div class="members-section">
           <h4 class="members-title">
             Members
@@ -47,10 +43,382 @@
           <div class="members-list">
             @for (member of members(); track member.userId) {
               <div class="member-item">
+                <div class="member-avatar">
+                  @if (member.avatarUrl) {
+                    <img [src]="member.avatarUrl" [alt]="member.name">
+                  } @else {
+                    <span>{{ member.name.charAt(0) }}</span>
+                  }
+                  <span class="member-online-dot"
+                        [class.online]="member.isOnline">
+                  </span>
+                </div>
+                <div class="member-info">
+                  <span class="member-name">
+                    {{ member.name }}
+                    @if (member.userId === currentUser()?.id) {
+                      <span class="you-badge">you</span>
+                    }
+                  </span>
+                  <span class="member-role"
+                        [class.member-role--owner]="member.role === 'OWNER'">
+                    {{ member.role | lowercase }}
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
 
-                <!-- Avatar with online indicator -->
-                <div class="member-avatar"
-                     [class.member-avatar--online]="member.isOnline">
+      </aside>
+
+      <!-- ═══ MAIN CONTENT ══════════════════════════════════ -->
+      <div class="chat-area">
+
+        <!-- ─── TAB HEADER ──────────────────────────────── -->
+        <div class="room-tabs">
+
+          <a class="back-link" routerLink="/rooms">
+            <mat-icon>arrow_back</mat-icon>
+          </a>
+
+          <div class="tab-list">
+            <button class="tab-btn"
+                    [class.active]="activeTab() === 'chat'"
+                    (click)="activeTab.set('chat')">
+              <mat-icon>chat_bubble_outline</mat-icon>
+              Chat
+            </button>
+
+            <button class="tab-btn"
+                    [class.active]="activeTab() === 'resources'"
+                    (click)="activeTab.set('resources')">
+              <mat-icon>folder_open</mat-icon>
+              Resources
+              @if (resources().length > 0) {
+                <span class="tab-count">{{ resources().length }}</span>
+              }
+            </button>
+
+            <button class="tab-btn"
+                    [class.active]="activeTab() === 'members'"
+                    (click)="activeTab.set('members')">
+              <mat-icon>group</mat-icon>
+              Members
+              <span class="tab-count">{{ members().length }}</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- ─── CHAT TAB ─────────────────────────────────── -->
+        @if (activeTab() === 'chat') {
+
+          <div class="messages-wrap">
+            @if (hasMoreHistory()) {
+              <div class="load-more-wrap">
+                <button class="load-more-btn"
+                        (click)="loadOlderMessages()"
+                        [disabled]="loadingHistory()">
+                  @if (loadingHistory()) { Loading... }
+                  @else { Load older messages }
+                </button>
+              </div>
+            }
+
+            <div class="message-list" #messageList>
+
+              @if (loadingHistory() && messages().length === 0) {
+                <div class="messages-loading">
+                  <div class="loading-spinner"></div>
+                </div>
+              }
+
+              @if (!loadingHistory() && messages().length === 0) {
+                <div class="messages-empty">
+                  <span>💬</span>
+                  <p>No messages yet. Say hello!</p>
+                </div>
+              }
+
+              @for (message of messages(); track message.id;
+                let i = $index) {
+                <div class="message-group"
+                     [class.message-group--own]="isOwnMessage(message)">
+
+                  @if (shouldShowSender(messages(), i)
+                  && !isOwnMessage(message)) {
+                    <div class="message-avatar">
+                      @if (message.sender.avatarUrl) {
+                        <img [src]="message.sender.avatarUrl"
+                             [alt]="message.sender.name">
+                      } @else {
+                        <span>{{ message.sender.name.charAt(0) }}</span>
+                      }
+                    </div>
+                  } @else if (!isOwnMessage(message)) {
+                    <div class="message-avatar-spacer"></div>
+                  }
+
+                  <div class="message-content">
+                    @if (shouldShowSender(messages(), i)
+                    && !isOwnMessage(message)) {
+                      <span class="message-sender">
+                        {{ message.sender.name }}
+                      </span>
+                    }
+                    <div class="message-bubble"
+                         [class.message-bubble--own]="isOwnMessage(message)">
+                      {{ message.content }}
+                    </div>
+                    <span class="message-time">
+                      {{ formatTime(message.createdAt) }}
+                      @if (message.isEdited) { <em>(edited)</em> }
+                    </span>
+                  </div>
+
+                </div>
+              }
+
+              @if (typingText()) {
+                <div class="typing-indicator">
+                  <span class="typing-dots">
+                    <span></span><span></span><span></span>
+                  </span>
+                  <span class="typing-text">{{ typingText() }}</span>
+                </div>
+              }
+
+            </div>
+          </div>
+
+          <div class="message-input-wrap">
+            <div class="message-input"
+                 [class.message-input--focused]="messageText.length > 0">
+              <textarea class="message-textarea"
+                        [(ngModel)]="messageText"
+                        (input)="onInputChange()"
+                        (keydown)="onKeydown($event)"
+                        placeholder="Message {{ room()!.name }}..."
+                        rows="1"
+                        [disabled]="wsService.status() !== 'CONNECTED'">
+              </textarea>
+              <button class="send-btn"
+                      (click)="sendMessage()"
+                      [disabled]="!messageText.trim()
+                               || wsService.status() !== 'CONNECTED'"
+                      matTooltip="Send (Enter)">
+                <mat-icon>send</mat-icon>
+              </button>
+            </div>
+
+            @if (wsService.status() !== 'CONNECTED') {
+              <p class="input-warning">
+                <mat-icon>warning</mat-icon>
+                Connecting to chat...
+              </p>
+            }
+          </div>
+
+        }
+
+        <!-- ─── RESOURCES TAB ────────────────────────────── -->
+        @if (activeTab() === 'resources') {
+
+          <!-- Upload progress bar -->
+          @if (uploadProgress()) {
+            <div class="upload-progress">
+              <mat-progress-bar mode="indeterminate" />
+              <span>Uploading file...</span>
+            </div>
+          }
+
+          <!-- Upload form (shown after file selection) -->
+          @if (showUploadForm()) {
+            <div class="upload-form-overlay">
+              <div class="upload-form">
+                <h3>Upload File</h3>
+                <div class="form-group">
+                  <label>Title</label>
+                  <input [(ngModel)]="uploadTitle"
+                         placeholder="Resource title">
+                </div>
+                <div class="form-group">
+                  <label>Description (optional)</label>
+                  <input [(ngModel)]="uploadDescription"
+                         placeholder="Brief description">
+                </div>
+                <div class="upload-form__actions">
+                  <button class="btn-cancel" (click)="cancelUpload()">
+                    Cancel
+                  </button>
+                  <button class="btn-confirm" (click)="confirmUpload()">
+                    Upload
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+
+          <!-- Link form -->
+          @if (showLinkForm()) {
+            <div class="upload-form-overlay">
+              <div class="upload-form"
+                   [formGroup]="linkForm"
+                   (ngSubmit)="submitLink()">
+                <h3>Add Link</h3>
+                <div class="form-group">
+                  <label>Title *</label>
+                  <input formControlName="title"
+                         placeholder="e.g. Java Documentation">
+                </div>
+                <div class="form-group">
+                  <label>URL *</label>
+                  <input formControlName="url"
+                         placeholder="https://...">
+                </div>
+                <div class="form-group">
+                  <label>Description (optional)</label>
+                  <input formControlName="description"
+                         placeholder="Brief description">
+                </div>
+                <div class="upload-form__actions">
+                  <button type="button" class="btn-cancel"
+                          (click)="showLinkForm.set(false)">
+                    Cancel
+                  </button>
+                  <button type="button" class="btn-confirm"
+                          (click)="submitLink()"
+                          [disabled]="linkForm.invalid">
+                    Add Link
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+
+          <!-- Resources Header -->
+          <div class="resources-header">
+            <div class="resource-filters">
+              @for (filter of resourceFilters; track filter) {
+                <button class="filter-chip"
+                        [class.active]="resourceFilter() === filter"
+                        (click)="setResourceFilter(filter)">
+                  {{ filter === 'ALL' ? 'All' : filter }}
+                </button>
+              }
+            </div>
+
+            <div class="resource-actions">
+              <!-- Hidden file input -->
+              <input #fileInput
+                     type="file"
+                     class="hidden-input"
+                     accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,
+                             image/*,video/*"
+                     (change)="onFileSelected($event)">
+
+              <button class="btn-add-link"
+                      (click)="showLinkForm.set(true)">
+                <mat-icon>link</mat-icon>
+                Add Link
+              </button>
+
+              <button class="btn-upload"
+                      (click)="triggerFileUpload()">
+                <mat-icon>upload</mat-icon>
+                Upload File
+              </button>
+            </div>
+          </div>
+
+          <!-- Resources List -->
+          <div class="resources-list">
+
+            @if (loadingResources()) {
+              <div class="resources-loading">
+                <div class="loading-spinner"></div>
+              </div>
+            }
+
+            @if (!loadingResources()
+            && filteredResources().length === 0) {
+              <div class="resources-empty">
+                <span>📂</span>
+                <p>No resources yet. Upload a file or share a link!</p>
+              </div>
+            }
+
+            @for (resource of filteredResources(); track resource.id) {
+              <div class="resource-item"
+                   (click)="openResource(resource.url)">
+
+                <!-- Type icon -->
+                <div class="resource-icon"
+                     [style.background]="resourceTypeConfig[resource.type].color + '22'"
+                     [style.color]="resourceTypeConfig[resource.type].color">
+                  <mat-icon>
+                    {{ resourceTypeConfig[resource.type].icon }}
+                  </mat-icon>
+                </div>
+
+                <!-- Info -->
+                <div class="resource-info">
+                  <span class="resource-title">{{ resource.title }}</span>
+                  @if (resource.description) {
+                    <span class="resource-desc">
+                      {{ resource.description }}
+                    </span>
+                  }
+                  <div class="resource-meta">
+                    <span class="resource-uploader">
+                      Uploaded by {{ resource.uploadedBy.name }}
+                    </span>
+                    @if (resource.fileSize) {
+                      <span class="resource-size">
+                        {{ formatFileSize(resource.fileSize) }}
+                      </span>
+                    }
+                    <span class="resource-date">
+                      {{ formatTime(resource.createdAt) }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="resource-actions-row"
+                     (click)="$event.stopPropagation()">
+                  <a [href]="resource.url"
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     class="resource-btn"
+                     matTooltip="Open">
+                    <mat-icon>open_in_new</mat-icon>
+                  </a>
+
+                  @if (canDelete(resource)) {
+                    <button class="resource-btn resource-btn--danger"
+                            (click)="deleteResource(resource)"
+                            matTooltip="Delete">
+                      <mat-icon>delete_outline</mat-icon>
+                    </button>
+                  }
+                </div>
+
+              </div>
+            }
+
+          </div>
+
+        }
+
+        <!-- ─── MEMBERS TAB ──────────────────────────────── -->
+        @if (activeTab() === 'members') {
+          <div class="members-tab">
+            @for (member of members(); track member.userId) {
+              <div class="member-row">
+
+                <div class="member-avatar member-avatar--lg">
                   @if (member.avatarUrl) {
                     <img [src]="member.avatarUrl" [alt]="member.name">
                   } @else {
@@ -68,172 +436,32 @@
                       <span class="you-badge">you</span>
                     }
                   </span>
-                  <span class="member-role"
-                        [class.member-role--owner]="member.role === 'OWNER'">
-                    {{ member.role | lowercase }}
+                  <span class="member-username">
+                    &#64;{{ member.username }}
                   </span>
                 </div>
 
-              </div>
-            }
-          </div>
-        </div>
-
-      </aside>
-
-      <!-- ═══ CHAT AREA ══════════════════════════════════ -->
-      <div class="chat-area">
-
-        <!-- Chat Header -->
-        <div class="chat-header">
-          <a class="back-link" routerLink="/rooms">
-            <mat-icon>arrow_back</mat-icon>
-          </a>
-          <div class="chat-header__info">
-            <h3>{{ room()!.name }}</h3>
-            <span>{{ room()!.memberCount }} members</span>
-          </div>
-        </div>
-
-        <!-- Messages -->
-        <div class="messages-wrap">
-
-          <!-- Load older messages -->
-          @if (hasMoreHistory()) {
-            <div class="load-more-wrap">
-              <button class="load-more-btn"
-                      (click)="loadOlderMessages()"
-                      [disabled]="loadingHistory()">
-                @if (loadingHistory()) {
-                  Loading...
-                } @else {
-                  Load older messages
-                }
-              </button>
-            </div>
-          }
-
-          <!-- Message list -->
-          <div class="message-list" #messageList>
-
-            @if (loadingHistory() && messages().length === 0) {
-              <div class="messages-loading">
-                <div class="loading-spinner"></div>
-              </div>
-            }
-
-            @if (!loadingHistory() && messages().length === 0) {
-              <div class="messages-empty">
-                <span>💬</span>
-                <p>No messages yet. Say hello!</p>
-              </div>
-            }
-
-            @for (message of messages(); track message.id; let i = $index) {
-
-              <div class="message-group"
-                   [class.message-group--own]="isOwnMessage(message)">
-
-                <!-- Show avatar only for first message in group -->
-                @if (shouldShowSender(messages(), i)
-                && !isOwnMessage(message)) {
-                  <div class="message-avatar">
-                    @if (message.sender.avatarUrl) {
-                      <img [src]="message.sender.avatarUrl"
-                           [alt]="message.sender.name">
-                    } @else {
-                      <span>{{ message.sender.name.charAt(0) }}</span>
-                    }
-                  </div>
-                } @else if (!isOwnMessage(message)) {
-                  <!-- Spacer to keep alignment -->
-                  <div class="message-avatar-spacer"></div>
-                }
-
-                <div class="message-content">
-                  <!-- Show name only for first message in group -->
-                  @if (shouldShowSender(messages(), i)
-                  && !isOwnMessage(message)) {
-                    <span class="message-sender">
-                      {{ message.sender.name }}
-                    </span>
-                  }
-
-                  <div class="message-bubble"
-                       [class.message-bubble--own]="isOwnMessage(message)">
-                    {{ message.content }}
-                  </div>
-
-                  <span class="message-time">
-                    {{ formatTime(message.createdAt) }}
-                    @if (message.isEdited) { <em>(edited)</em> }
-                  </span>
-                </div>
-
-              </div>
-
-            }
-
-            <!-- Typing indicator -->
-            @if (typingText()) {
-              <div class="typing-indicator">
-                <span class="typing-dots">
-                  <span></span>
-                  <span></span>
-                  <span></span>
+                <span class="member-role"
+                      [class.member-role--owner]="member.role === 'OWNER'"
+                      [class.member-role--mod]="member.role === 'MODERATOR'">
+                  {{ member.role | lowercase }}
                 </span>
-                <span class="typing-text">{{ typingText() }}</span>
+
               </div>
             }
-
           </div>
-        </div>
-
-        <!-- Message Input -->
-        <div class="message-input-wrap">
-          <div class="message-input"
-               [class.message-input--focused]="messageText.length > 0">
-
-            <textarea class="message-textarea"
-                      [(ngModel)]="messageText"
-                      (input)="onInputChange()"
-                      (keydown)="onKeydown($event)"
-                      placeholder="Message {{ room()!.name }}..."
-                      rows="1"
-                      [disabled]="wsService.status() !== 'CONNECTED'">
-            </textarea>
-
-            <button class="send-btn"
-                    (click)="sendMessage()"
-                    [disabled]="!messageText.trim()
-                             || wsService.status() !== 'CONNECTED'"
-                    matTooltip="Send message (Enter)">
-              <mat-icon>send</mat-icon>
-            </button>
-
-          </div>
-
-          @if (wsService.status() !== 'CONNECTED') {
-            <p class="input-warning">
-              <mat-icon>warning</mat-icon>
-              Connecting to chat...
-            </p>
-          }
-        </div>
+        }
 
       </div>
 
     </div>
   }
 
-  <!-- Room not found -->
   @if (!loadingRoom() && !room()) {
     <div class="room-detail__empty">
       <span>❌</span>
       <h2>Room not found</h2>
-      <a routerLink="/rooms" mat-stroked-button>
-        Back to Rooms
-      </a>
+      <a routerLink="/rooms" mat-stroked-button>Back to Rooms</a>
     </div>
   }
 
